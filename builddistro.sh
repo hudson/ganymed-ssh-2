@@ -8,8 +8,8 @@
 # ------------------------------------------------------------------------
 
 DIST=ganymed-ssh2-build251beta1
-JAVADOC=/opt/jdk1.6.0_18/bin/javadoc
-JAR=/opt/jdk1.6.0_18/bin/jar
+JAVADOC=$JAVA_HOME/bin/javadoc
+JAR=$JAVA_HOME/bin/jar
 
 # ------------------------------------------------------------------------
 # No need to adjust anything below
