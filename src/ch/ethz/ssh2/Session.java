@@ -18,9 +18,9 @@ import ch.ethz.ssh2.channel.X11ServerData;
  * in this context either a shell, an application or a system command. The
  * program may or may not have a tty. Only one single program can be started on
  * a session. However, multiple sessions can be active simultaneously.
- * 
+ *
  * @author Christian Plattner
- * @version 2.50, 03/15/10
+ * @version $Id$
  */
 public class Session
 {
@@ -35,7 +35,7 @@ public class Session
 	String x11FakeCookie = null;
 
 	final SecureRandom rnd;
-	
+
 	Session(ChannelManager cm, SecureRandom rnd) throws IOException
 	{
 		this.cm = cm;
@@ -46,7 +46,7 @@ public class Session
 	/**
 	 * Basically just a wrapper for lazy people - identical to calling
 	 * <code>requestPTY("dumb", 0, 0, 0, 0, null)</code>.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public void requestDumbPTY() throws IOException
@@ -57,7 +57,7 @@ public class Session
 	/**
 	 * Basically just another wrapper for lazy people - identical to calling
 	 * <code>requestPTY(term, 0, 0, 0, 0, null)</code>.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public void requestPTY(String term) throws IOException
@@ -67,12 +67,12 @@ public class Session
 
 	/**
 	 * Allocate a pseudo-terminal for this session.
-	 * <p>
+	 * <p/>
 	 * This method may only be called before a program or shell is started in
 	 * this session.
-	 * <p>
+	 * <p/>
 	 * Different aspects can be specified:
-	 * <p>
+	 * <p/>
 	 * <ul>
 	 * <li>The TERM environment variable value (e.g., vt100)</li>
 	 * <li>The terminal's dimensions.</li>
@@ -83,23 +83,17 @@ public class Session
 	 * the drawable area of the window. The dimension parameters are only
 	 * informational. The encoding of terminal modes (parameter
 	 * <code>terminal_modes</code>) is described in RFC4254.
-	 * 
-	 * @param term
-	 *            The TERM environment variable value (e.g., vt100)
-	 * @param term_width_characters
-	 *            terminal width, characters (e.g., 80)
-	 * @param term_height_characters
-	 *            terminal height, rows (e.g., 24)
-	 * @param term_width_pixels
-	 *            terminal width, pixels (e.g., 640)
-	 * @param term_height_pixels
-	 *            terminal height, pixels (e.g., 480)
-	 * @param terminal_modes
-	 *            encoded terminal modes (may be <code>null</code>)
+	 *
+	 * @param term The TERM environment variable value (e.g., vt100)
+	 * @param term_width_characters terminal width, characters (e.g., 80)
+	 * @param term_height_characters terminal height, rows (e.g., 24)
+	 * @param term_width_pixels terminal width, pixels (e.g., 640)
+	 * @param term_height_pixels terminal height, pixels (e.g., 480)
+	 * @param terminal_modes encoded terminal modes (may be <code>null</code>)
 	 * @throws IOException
 	 */
-	public void requestPTY(String term, int term_width_characters, int term_height_characters, int term_width_pixels,
-			int term_height_pixels, byte[] terminal_modes) throws IOException
+	public void requestPTY(String term, int term_width_characters, int term_height_characters, int term_width_pixels, int term_height_pixels, byte[] terminal_modes)
+			throws IOException
 	{
 		if (term == null)
 			throw new IllegalArgumentException("TERM cannot be null.");
@@ -110,7 +104,7 @@ public class Session
 				throw new IOException("Illegal terminal modes description, does not end in zero byte");
 		}
 		else
-			terminal_modes = new byte[] { 0 };
+			terminal_modes = new byte[]{0};
 
 		synchronized (this)
 		{
@@ -122,30 +116,28 @@ public class Session
 				throw new IOException("A PTY was already requested.");
 
 			if (flag_execution_started)
-				throw new IOException(
-						"Cannot request PTY at this stage anymore, a remote execution has already started.");
+				throw new IOException("Cannot request PTY at this stage anymore, a remote execution has already started.");
 
 			flag_pty_requested = true;
 		}
 
-		cm.requestPTY(cn, term, term_width_characters, term_height_characters, term_width_pixels, term_height_pixels,
-				terminal_modes);
+		cm.requestPTY(cn, term, term_width_characters, term_height_characters, term_width_pixels, term_height_pixels, terminal_modes);
 	}
 
 	/**
 	 * Request X11 forwarding for the current session.
-	 * <p>
+	 * <p/>
 	 * You have to supply the name and port of your X-server.
-	 * <p>
+	 * <p/>
 	 * This method may only be called before a program or shell is started in
 	 * this session.
-	 * 
+	 *
 	 * @param hostname the hostname of the real (target) X11 server (e.g., 127.0.0.1)
 	 * @param port the port of the real (target) X11 server (e.g., 6010)
 	 * @param cookie if non-null, then present this cookie to the real X11 server
 	 * @param singleConnection if true, then the server is instructed to only forward one single
-	 *        connection, no more connections shall be forwarded after first, or after the session
-	 *        channel has been closed
+	 * connection, no more connections shall be forwarded after first, or after the session
+	 * channel has been closed
 	 * @throws IOException
 	 */
 	public void requestX11Forwarding(String hostname, int port, byte[] cookie, boolean singleConnection)
@@ -164,8 +156,7 @@ public class Session
 				throw new IOException("X11 forwarding was already requested.");
 
 			if (flag_execution_started)
-				throw new IOException(
-						"Cannot request X11 forwarding at this stage anymore, a remote execution has already started.");
+				throw new IOException("Cannot request X11 forwarding at this stage anymore, a remote execution has already started.");
 
 			flag_x11_requested = true;
 		}
@@ -191,7 +182,7 @@ public class Session
 
 			/* Generate also hex representation of fake cookie */
 
-			StringBuffer tmp = new StringBuffer(32);
+			StringBuilder tmp = new StringBuilder(32);
 			for (int i = 0; i < fakeCookie.length; i++)
 			{
 				String digit2 = Integer.toHexString(fakeCookie[i] & 0xff);
@@ -226,12 +217,23 @@ public class Session
 
 	/**
 	 * Execute a command on the remote machine.
-	 * 
-	 * @param cmd
-	 *            The command to execute on the remote host.
+	 *
+	 * @param cmd The command to execute on the remote host.
 	 * @throws IOException
 	 */
 	public void execCommand(String cmd) throws IOException
+	{
+		this.execCommand(cmd, null);
+	}
+
+	/**
+	 * Execute a command on the remote machine.
+	 *
+	 * @param cmd The command to execute on the remote host.
+	 * @param charsetName The charset used to convert between Java Unicode Strings and byte encodings
+	 * @throws IOException
+	 */
+	public void execCommand(String cmd, String charsetName) throws IOException
 	{
 		if (cmd == null)
 			throw new IllegalArgumentException("cmd argument may not be null");
@@ -248,12 +250,12 @@ public class Session
 			flag_execution_started = true;
 		}
 
-		cm.requestExecCommand(cn, cmd);
+		cm.requestExecCommand(cn, cmd, charsetName);
 	}
 
 	/**
 	 * Start a shell on the remote machine.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public void startShell() throws IOException
@@ -276,7 +278,7 @@ public class Session
 	/**
 	 * Start a subsystem on the remote machine.
 	 * Unless you know what you are doing, you will never need this.
-	 * 
+	 *
 	 * @param name the name of the subsystem.
 	 * @throws IOException
 	 */
@@ -323,29 +325,24 @@ public class Session
 	 * method if you use concurrent threads that operate on either of the two
 	 * InputStreams of this <code>Session</code> (otherwise this method may
 	 * block, even though more data is available).
-	 * 
-	 * @param timeout
-	 *            The (non-negative) timeout in <code>ms</code>. <code>0</code> means no
-	 *            timeout, the call may block forever.
-	 * @return
-	 *            <ul>
-	 *            <li><code>0</code> if no more data will arrive.</li>
-	 *            <li><code>1</code> if more data is available.</li>
-	 *            <li><code>-1</code> if a timeout occurred.</li>
-	 *            </ul>
-	 *            
-	 * @throws    IOException
+	 *
+	 * @param timeout The (non-negative) timeout in <code>ms</code>. <code>0</code> means no
+	 * timeout, the call may block forever.
+	 * @return <ul>
+	 *         <li><code>0</code> if no more data will arrive.</li>
+	 *         <li><code>1</code> if more data is available.</li>
+	 *         <li><code>-1</code> if a timeout occurred.</li>
+	 *         </ul>
+	 * @throws IOException
 	 * @deprecated This method has been replaced with a much more powerful wait-for-condition
 	 *             interface and therefore acts only as a wrapper.
-	 * 
 	 */
 	public int waitUntilDataAvailable(long timeout) throws IOException
 	{
 		if (timeout < 0)
 			throw new IllegalArgumentException("timeout must not be negative!");
 
-		int conditions = cm.waitForCondition(cn, timeout, ChannelCondition.STDOUT_DATA | ChannelCondition.STDERR_DATA
-				| ChannelCondition.EOF);
+		int conditions = cm.waitForCondition(cn, timeout, ChannelCondition.STDOUT_DATA | ChannelCondition.STDERR_DATA | ChannelCondition.EOF);
 
 		if ((conditions & ChannelCondition.TIMEOUT) != 0)
 			return -1;
@@ -363,23 +360,23 @@ public class Session
 
 	/**
 	 * This method blocks until certain conditions hold true on the underlying SSH-2 channel.
-	 * <p>
+	 * <p/>
 	 * This method returns as soon as one of the following happens:
 	 * <ul>
 	 * <li>at least of the specified conditions (see {@link ChannelCondition}) holds true</li>
-	 * <li>timeout > 0 and a timeout occured (TIMEOUT will be set in result conditions)</a> 
+	 * <li>timeout > 0 and a timeout occured (TIMEOUT will be set in result conditions)</a>
 	 * <li>the underlying channel was closed (CLOSED will be set in result conditions)</a>
 	 * </ul>
-	 * <p>
+	 * <p/>
 	 * In any case, the result value contains ALL current conditions, which may be more
 	 * than the specified condition set (i.e., never use the "==" operator to test for conditions
-	 * in the bitmask, see also comments in {@link ChannelCondition}). 
-	 * <p>
+	 * in the bitmask, see also comments in {@link ChannelCondition}).
+	 * <p/>
 	 * Note: do NOT call this method if you want to wait for STDOUT_DATA or STDERR_DATA and
 	 * there are concurrent threads (e.g., StreamGobblers) that operate on either of the two
 	 * InputStreams of this <code>Session</code> (otherwise this method may
 	 * block, even though more data is available in the StreamGobblers).
-	 * 
+	 *
 	 * @param condition_set a bitmask based on {@link ChannelCondition} values
 	 * @param timeout non-negative timeout in ms, <code>0</code> means no timeout
 	 * @return all bitmask specifying all current conditions that are true
@@ -398,7 +395,7 @@ public class Session
 	 * careful - not all server implementations return this value. It is
 	 * generally a good idea to call this method only when all data from the
 	 * remote side has been consumed (see also the <code<WaitForCondition</code> method).
-	 * 
+	 *
 	 * @return An <code>Integer</code> holding the exit code, or
 	 *         <code>null</code> if no exit code is (yet) available.
 	 */
@@ -411,7 +408,7 @@ public class Session
 	 * Get the name of the signal by which the process on the remote side was
 	 * stopped - if available and applicable. Be careful - not all server
 	 * implementations return this value.
-	 * 
+	 *
 	 * @return An <code>String</code> holding the name of the signal, or
 	 *         <code>null</code> if the process exited normally or is still
 	 *         running (or if the server forgot to send this information).
@@ -429,7 +426,6 @@ public class Session
 	 * closed (this can happen, e.g., if the other server sent a close message.)
 	 * However, as long as you have not called the <code>close()</code>
 	 * method, you may be wasting (local) resources.
-	 * 
 	 */
 	public void close()
 	{

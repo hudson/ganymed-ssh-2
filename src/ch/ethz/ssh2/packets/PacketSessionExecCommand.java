@@ -4,11 +4,14 @@
  */
 package ch.ethz.ssh2.packets;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
 /**
  * PacketSessionExecCommand.
- * 
+ *
  * @author Christian Plattner
- * @version 2.50, 03/15/10
+ * @version $Id$
  */
 public class PacketSessionExecCommand
 {
@@ -24,8 +27,13 @@ public class PacketSessionExecCommand
 		this.wantReply = wantReply;
 		this.command = command;
 	}
-	
-	public byte[] getPayload()
+
+	public byte[] getPayload() throws IOException
+	{
+		return this.getPayload(null);
+	}
+
+	public byte[] getPayload(String charsetName) throws UnsupportedEncodingException
 	{
 		if (payload == null)
 		{
@@ -34,7 +42,7 @@ public class PacketSessionExecCommand
 			tw.writeUINT32(recipientChannelID);
 			tw.writeString("exec");
 			tw.writeBoolean(wantReply);
-			tw.writeString(command);
+			tw.writeString(command, charsetName);
 			payload = tw.getBytes();
 		}
 		return payload;
