@@ -28,11 +28,11 @@ import ch.ethz.ssh2.transport.TransportManager;
 
 /**
  * ChannelManager. Please read the comments in Channel.java.
- * <p>
+ * <p/>
  * Besides the crypto part, this is the core of the library.
- * 
+ *
  * @author Christian Plattner
- * @version 2.50, 03/15/10
+ * @version $Id$
  */
 public class ChannelManager implements MessageHandler
 {
@@ -406,10 +406,10 @@ public class ChannelManager implements MessageHandler
 					while (true)
 					{
 						if (c.state == Channel.STATE_CLOSED)
-							throw new IOException("SSH channel is closed. (" + c.getReasonClosed() + ")");
+							throw new ChannelClosedException("SSH channel is closed. (" + c.getReasonClosed() + ")");
 
 						if (c.state != Channel.STATE_OPEN)
-							throw new IOException("SSH channel in strange state. (" + c.state + ")");
+							throw new ChannelClosedException("SSH channel in strange state. (" + c.state + ")");
 
 						if (c.remoteWindow != 0)
 							break;
@@ -460,7 +460,7 @@ public class ChannelManager implements MessageHandler
 				synchronized (c.channelSendLock)
 				{
 					if (c.closeMessageSent == true)
-						throw new IOException("SSH channel is closed. (" + c.getReasonClosed() + ")");
+						throw new ChannelClosedException("SSH channel is closed. (" + c.getReasonClosed() + ")");
 
 					tm.sendMessage(msg);
 				}
@@ -570,7 +570,7 @@ public class ChannelManager implements MessageHandler
 	}
 
 	public Channel openDirectTCPIPChannel(String host_to_connect, int port_to_connect, String originator_IP_address,
-			int originator_port) throws IOException
+										  int originator_port) throws IOException
 	{
 		Channel c = new Channel(this);
 
@@ -612,7 +612,7 @@ public class ChannelManager implements MessageHandler
 	}
 
 	public void requestPTY(Channel c, String term, int term_width_characters, int term_height_characters,
-			int term_width_pixels, int term_height_pixels, byte[] terminal_modes) throws IOException
+						   int term_width_pixels, int term_height_pixels, byte[] terminal_modes) throws IOException
 	{
 		PacketSessionPtyRequest spr;
 
@@ -645,7 +645,7 @@ public class ChannelManager implements MessageHandler
 	}
 
 	public void requestX11(Channel c, boolean singleConnection, String x11AuthenticationProtocol,
-			String x11AuthenticationCookie, int x11ScreenNumber) throws IOException
+						   String x11AuthenticationCookie, int x11ScreenNumber) throws IOException
 	{
 		PacketSessionX11Request psr;
 
@@ -713,6 +713,14 @@ public class ChannelManager implements MessageHandler
 
 	public void requestExecCommand(Channel c, String cmd) throws IOException
 	{
+		this.requestExecCommand(c, cmd, null);
+	}
+
+	/**
+	 * @param charsetName The charset used to convert between Java Unicode Strings and byte encodings
+	 */
+	public void requestExecCommand(Channel c, String cmd, String charsetName) throws IOException
+	{
 		PacketSessionExecCommand sm;
 
 		synchronized (c)
@@ -729,7 +737,7 @@ public class ChannelManager implements MessageHandler
 		{
 			if (c.closeMessageSent)
 				throw new IOException("Cannot execute command on this channel (" + c.getReasonClosed() + ")");
-			tm.sendMessage(sm.getPayload());
+			tm.sendMessage(sm.getPayload(charsetName));
 		}
 
 		if (log.isEnabled())
@@ -823,15 +831,11 @@ public class ChannelManager implements MessageHandler
 
 	/**
 	 * Wait until for a condition.
-	 * 
-	 * @param c
-	 *            Channel
-	 * @param timeout
-	 *            in ms, 0 means no timeout.
-	 * @param condition_mask
-	 *            minimum event mask
+	 *
+	 * @param c Channel
+	 * @param timeout in ms, 0 means no timeout.
+	 * @param condition_mask minimum event mask (at least one of the conditions must be fulfilled)
 	 * @return all current events
-	 * 
 	 */
 	public int waitForCondition(Channel c, long timeout, int condition_mask)
 	{
@@ -1477,23 +1481,23 @@ public class ChannelManager implements MessageHandler
 
 		switch (reasonCode)
 		{
-		case 1:
-			reasonCodeSymbolicName = "SSH_OPEN_ADMINISTRATIVELY_PROHIBITED";
-			break;
-		case 2:
-			reasonCodeSymbolicName = "SSH_OPEN_CONNECT_FAILED";
-			break;
-		case 3:
-			reasonCodeSymbolicName = "SSH_OPEN_UNKNOWN_CHANNEL_TYPE";
-			break;
-		case 4:
-			reasonCodeSymbolicName = "SSH_OPEN_RESOURCE_SHORTAGE";
-			break;
-		default:
-			reasonCodeSymbolicName = "UNKNOWN REASON CODE (" + reasonCode + ")";
+			case 1:
+				reasonCodeSymbolicName = "SSH_OPEN_ADMINISTRATIVELY_PROHIBITED";
+				break;
+			case 2:
+				reasonCodeSymbolicName = "SSH_OPEN_CONNECT_FAILED";
+				break;
+			case 3:
+				reasonCodeSymbolicName = "SSH_OPEN_UNKNOWN_CHANNEL_TYPE";
+				break;
+			case 4:
+				reasonCodeSymbolicName = "SSH_OPEN_RESOURCE_SHORTAGE";
+				break;
+			default:
+				reasonCodeSymbolicName = "UNKNOWN REASON CODE (" + reasonCode + ")";
 		}
 
-		StringBuffer descriptionBuffer = new StringBuffer();
+		StringBuilder descriptionBuffer = new StringBuilder();
 		descriptionBuffer.append(description);
 
 		for (int i = 0; i < descriptionBuffer.length(); i++)
@@ -1614,50 +1618,50 @@ public class ChannelManager implements MessageHandler
 
 		switch (msg[0])
 		{
-		case Packets.SSH_MSG_CHANNEL_OPEN_CONFIRMATION:
-			msgChannelOpenConfirmation(msg, msglen);
-			break;
-		case Packets.SSH_MSG_CHANNEL_WINDOW_ADJUST:
-			msgChannelWindowAdjust(msg, msglen);
-			break;
-		case Packets.SSH_MSG_CHANNEL_DATA:
-			msgChannelData(msg, msglen);
-			break;
-		case Packets.SSH_MSG_CHANNEL_EXTENDED_DATA:
-			msgChannelExtendedData(msg, msglen);
-			break;
-		case Packets.SSH_MSG_CHANNEL_REQUEST:
-			msgChannelRequest(msg, msglen);
-			break;
-		case Packets.SSH_MSG_CHANNEL_EOF:
-			msgChannelEOF(msg, msglen);
-			break;
-		case Packets.SSH_MSG_CHANNEL_OPEN:
-			msgChannelOpen(msg, msglen);
-			break;
-		case Packets.SSH_MSG_CHANNEL_CLOSE:
-			msgChannelClose(msg, msglen);
-			break;
-		case Packets.SSH_MSG_CHANNEL_SUCCESS:
-			msgChannelSuccess(msg, msglen);
-			break;
-		case Packets.SSH_MSG_CHANNEL_FAILURE:
-			msgChannelFailure(msg, msglen);
-			break;
-		case Packets.SSH_MSG_CHANNEL_OPEN_FAILURE:
-			msgChannelOpenFailure(msg, msglen);
-			break;
-		case Packets.SSH_MSG_GLOBAL_REQUEST:
-			msgGlobalRequest(msg, msglen);
-			break;
-		case Packets.SSH_MSG_REQUEST_SUCCESS:
-			msgGlobalSuccess();
-			break;
-		case Packets.SSH_MSG_REQUEST_FAILURE:
-			msgGlobalFailure();
-			break;
-		default:
-			throw new IOException("Cannot handle unknown channel message " + (msg[0] & 0xff));
+			case Packets.SSH_MSG_CHANNEL_OPEN_CONFIRMATION:
+				msgChannelOpenConfirmation(msg, msglen);
+				break;
+			case Packets.SSH_MSG_CHANNEL_WINDOW_ADJUST:
+				msgChannelWindowAdjust(msg, msglen);
+				break;
+			case Packets.SSH_MSG_CHANNEL_DATA:
+				msgChannelData(msg, msglen);
+				break;
+			case Packets.SSH_MSG_CHANNEL_EXTENDED_DATA:
+				msgChannelExtendedData(msg, msglen);
+				break;
+			case Packets.SSH_MSG_CHANNEL_REQUEST:
+				msgChannelRequest(msg, msglen);
+				break;
+			case Packets.SSH_MSG_CHANNEL_EOF:
+				msgChannelEOF(msg, msglen);
+				break;
+			case Packets.SSH_MSG_CHANNEL_OPEN:
+				msgChannelOpen(msg, msglen);
+				break;
+			case Packets.SSH_MSG_CHANNEL_CLOSE:
+				msgChannelClose(msg, msglen);
+				break;
+			case Packets.SSH_MSG_CHANNEL_SUCCESS:
+				msgChannelSuccess(msg, msglen);
+				break;
+			case Packets.SSH_MSG_CHANNEL_FAILURE:
+				msgChannelFailure(msg, msglen);
+				break;
+			case Packets.SSH_MSG_CHANNEL_OPEN_FAILURE:
+				msgChannelOpenFailure(msg, msglen);
+				break;
+			case Packets.SSH_MSG_GLOBAL_REQUEST:
+				msgGlobalRequest(msg, msglen);
+				break;
+			case Packets.SSH_MSG_REQUEST_SUCCESS:
+				msgGlobalSuccess();
+				break;
+			case Packets.SSH_MSG_REQUEST_FAILURE:
+				msgGlobalFailure();
+				break;
+			default:
+				throw new IOException("Cannot handle unknown channel message " + (msg[0] & 0xff));
 		}
 	}
 }
