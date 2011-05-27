@@ -2,7 +2,7 @@
  * Copyright (c) 2006-2011 Christian Plattner. All rights reserved.
  * Please see the LICENSE.txt for licensing details.
  */
-package ch.ethz.ssh2;
+package ch.ethz.ssh2.sftp;
 
 import java.io.IOException;
 

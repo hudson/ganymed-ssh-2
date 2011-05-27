@@ -36,6 +36,10 @@ public class Logger
 		return enabled;
 	}
 
+	public final void log(String message) {
+		this.log(50, message);
+	}
+
 	public final void log(int level, String message)
 	{
 		if ((enabled) && (level <= logLevel))
