@@ -8,9 +8,9 @@ import java.util.Vector;
 
 /**
  * BlockCipherFactory.
- * 
+ *
  * @author Christian Plattner
- * @version 2.50, 03/15/10
+ * @version $Id$
  */
 public class BlockCipherFactory
 {
@@ -30,22 +30,21 @@ public class BlockCipherFactory
 		}
 	}
 
-	static Vector ciphers = new Vector();
+	static Vector<CipherEntry> ciphers = new Vector<CipherEntry>();
 
 	static
 	{
 		/* Higher Priority First */
-
-		ciphers.addElement(new CipherEntry("aes256-ctr", 16, 32, "ch.ethz.ssh2.crypto.cipher.AES"));
-		ciphers.addElement(new CipherEntry("aes192-ctr", 16, 24, "ch.ethz.ssh2.crypto.cipher.AES"));
 		ciphers.addElement(new CipherEntry("aes128-ctr", 16, 16, "ch.ethz.ssh2.crypto.cipher.AES"));
+		ciphers.addElement(new CipherEntry("aes192-ctr", 16, 24, "ch.ethz.ssh2.crypto.cipher.AES"));
+		ciphers.addElement(new CipherEntry("aes256-ctr", 16, 32, "ch.ethz.ssh2.crypto.cipher.AES"));
 		ciphers.addElement(new CipherEntry("blowfish-ctr", 8, 16, "ch.ethz.ssh2.crypto.cipher.BlowFish"));
 
-		ciphers.addElement(new CipherEntry("aes256-cbc", 16, 32, "ch.ethz.ssh2.crypto.cipher.AES"));
-		ciphers.addElement(new CipherEntry("aes192-cbc", 16, 24, "ch.ethz.ssh2.crypto.cipher.AES"));
 		ciphers.addElement(new CipherEntry("aes128-cbc", 16, 16, "ch.ethz.ssh2.crypto.cipher.AES"));
+		ciphers.addElement(new CipherEntry("aes192-cbc", 16, 24, "ch.ethz.ssh2.crypto.cipher.AES"));
+		ciphers.addElement(new CipherEntry("aes256-cbc", 16, 32, "ch.ethz.ssh2.crypto.cipher.AES"));
 		ciphers.addElement(new CipherEntry("blowfish-cbc", 8, 16, "ch.ethz.ssh2.crypto.cipher.BlowFish"));
-		
+
 		ciphers.addElement(new CipherEntry("3des-ctr", 8, 24, "ch.ethz.ssh2.crypto.cipher.DESede"));
 		ciphers.addElement(new CipherEntry("3des-cbc", 8, 24, "ch.ethz.ssh2.crypto.cipher.DESede"));
 	}
@@ -55,16 +54,18 @@ public class BlockCipherFactory
 		String list[] = new String[ciphers.size()];
 		for (int i = 0; i < ciphers.size(); i++)
 		{
-			CipherEntry ce = (CipherEntry) ciphers.elementAt(i);
-			list[i] = new String(ce.type);
+			CipherEntry ce = ciphers.elementAt(i);
+			list[i] = ce.type;
 		}
 		return list;
 	}
 
 	public static void checkCipherList(String[] cipherCandidates)
 	{
-		for (int i = 0; i < cipherCandidates.length; i++)
-			getEntry(cipherCandidates[i]);
+		for (String cipherCandidate : cipherCandidates)
+		{
+			getEntry(cipherCandidate);
+		}
 	}
 
 	public static BlockCipher createCipher(String type, boolean encrypt, byte[] key, byte[] iv)
@@ -97,9 +98,11 @@ public class BlockCipherFactory
 	{
 		for (int i = 0; i < ciphers.size(); i++)
 		{
-			CipherEntry ce = (CipherEntry) ciphers.elementAt(i);
+			CipherEntry ce = ciphers.elementAt(i);
 			if (ce.type.equals(type))
+			{
 				return ce;
+			}
 		}
 		throw new IllegalArgumentException("Unkown algorithm " + type);
 	}
