@@ -9,9 +9,9 @@ import java.io.InputStream;
 
 /**
  * CipherInputStream.
- * 
+ *
  * @author Christian Plattner
- * @version 2.50, 03/15/10
+ * @version $Id$
  */
 public class CipherInputStream
 {
@@ -27,7 +27,7 @@ public class CipherInputStream
 	 * J2ME. Everything could be improved alot here.
 	 */
 
-	final int BUFF_SIZE = 2048;
+	private static final int BUFF_SIZE = 8192;
 	byte[] input_buffer = new byte[BUFF_SIZE];
 	int input_buffer_pos = 0;
 	int input_buffer_size = 0;
@@ -41,6 +41,7 @@ public class CipherInputStream
 	private int fill_buffer() throws IOException
 	{
 		input_buffer_pos = 0;
+		input_buffer_size = 0;
 		input_buffer_size = bi.read(input_buffer, 0, BUFF_SIZE);
 		return input_buffer_size;
 	}
@@ -48,14 +49,18 @@ public class CipherInputStream
 	private int internal_read(byte[] b, int off, int len) throws IOException
 	{
 		if (input_buffer_size < 0)
+		{
 			return -1;
+		}
 
 		if (input_buffer_pos >= input_buffer_size)
 		{
 			if (fill_buffer() <= 0)
+			{
 				return -1;
+			}
 		}
-		
+
 		int avail = input_buffer_size - input_buffer_pos;
 		int thiscopy = (len > avail) ? avail : len;
 
@@ -81,7 +86,9 @@ public class CipherInputStream
 		{
 			int len = internal_read(enc, n, blockSize - n);
 			if (len < 0)
+			{
 				throw new IOException("Cannot read full block, EOF reached.");
+			}
 			n += len;
 		}
 
@@ -108,7 +115,9 @@ public class CipherInputStream
 		while (len > 0)
 		{
 			if (pos >= blockSize)
+			{
 				getBlock();
+			}
 
 			int avail = blockSize - pos;
 			int copy = Math.min(avail, len);
@@ -133,13 +142,17 @@ public class CipherInputStream
 	public int readPlain(byte[] b, int off, int len) throws IOException
 	{
 		if (pos != blockSize)
+		{
 			throw new IOException("Cannot read plain since crypto buffer is not aligned.");
+		}
 		int n = 0;
 		while (n < len)
 		{
 			int cnt = internal_read(b, off + n, len - n);
 			if (cnt < 0)
+			{
 				throw new IOException("Cannot fill buffer, EOF reached.");
+			}
 			n += cnt;
 		}
 		return n;

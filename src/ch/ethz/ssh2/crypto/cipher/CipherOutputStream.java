@@ -9,9 +9,9 @@ import java.io.OutputStream;
 
 /**
  * CipherOutputStream.
- * 
+ *
  * @author Christian Plattner
- * @version 2.50, 03/15/10
+ * @version $Id$
  */
 public class CipherOutputStream
 {
@@ -27,7 +27,7 @@ public class CipherOutputStream
 	 * in J2ME. Everything could be improved here alot.
 	 */
 
-	final int BUFF_SIZE = 2048;
+	private static final int BUFF_SIZE = 8192;
 	byte[] out_buffer = new byte[BUFF_SIZE];
 	int out_buffer_pos = 0;
 
@@ -71,7 +71,9 @@ public class CipherOutputStream
 	public void flush() throws IOException
 	{
 		if (pos != 0)
+		{
 			throw new IOException("FATAL: cannot flush since crypto buffer is not aligned.");
+		}
 
 		if (out_buffer_pos > 0)
 		{
@@ -118,7 +120,9 @@ public class CipherOutputStream
 			len -= copy;
 
 			if (pos >= blockSize)
+			{
 				writeBlock();
+			}
 		}
 	}
 
@@ -126,20 +130,26 @@ public class CipherOutputStream
 	{
 		buffer[pos++] = (byte) b;
 		if (pos >= blockSize)
+		{
 			writeBlock();
+		}
 	}
 
 	public void writePlain(int b) throws IOException
 	{
 		if (pos != 0)
+		{
 			throw new IOException("Cannot write plain since crypto buffer is not aligned.");
+		}
 		internal_write(b);
 	}
 
 	public void writePlain(byte[] b, int off, int len) throws IOException
 	{
 		if (pos != 0)
+		{
 			throw new IOException("Cannot write plain since crypto buffer is not aligned.");
+		}
 		internal_write(b, off, len);
 	}
 }
