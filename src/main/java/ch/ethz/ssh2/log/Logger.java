@@ -9,19 +9,17 @@ package ch.ethz.ssh2.log;
  * Is not based on log4j (to reduce external dependencies).
  * However, if needed, something like log4j could easily be
  * hooked in.
- * 
+ *
  * @author Christian Plattner
- * @version 2.50, 03/15/10
+ * @version $Id$
  */
 
 public class Logger
 {
-	private static final boolean enabled = false;
-	private static final int logLevel = 99;
 
 	private String className;
 
-	public final static Logger getLogger(Class x)
+	public static Logger getLogger(Class x)
 	{
 		return new Logger(x);
 	}
@@ -33,24 +31,23 @@ public class Logger
 
 	public final boolean isEnabled()
 	{
-		return enabled;
+		return true;
 	}
 
-	public final void log(String message) {
+	public final void log(String message)
+	{
 		this.log(50, message);
 	}
 
 	public final void log(int level, String message)
 	{
-		if ((enabled) && (level <= logLevel))
+		if (level <= 20)
 		{
-			long now = System.currentTimeMillis();
-
-			synchronized (this)
-			{
-				System.err.println(now + " : " + className + ": " + message);
-				// or send it to log4j or whatever...
-			}
+			org.apache.log4j.Logger.getLogger(className).warn(message);
+		}
+		else
+		{
+			org.apache.log4j.Logger.getLogger(className).debug(message);
 		}
 	}
 }
