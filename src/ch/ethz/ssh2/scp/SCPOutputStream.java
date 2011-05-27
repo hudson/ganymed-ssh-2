@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import ch.ethz.ssh2.Session;
+import ch.ethz.ssh2.util.StringEncoder;
 
 /**
  * @version $Id:$
@@ -33,7 +34,7 @@ public class SCPOutputStream extends BufferedOutputStream
 
 		String cline = "C" + mode + " " + length + " " + remoteFile + "\n";
 
-		super.write(cline.getBytes());
+		super.write(StringEncoder.GetBytes(cline));
 		this.flush();
 
 		scp.readResponse(is);
@@ -49,7 +50,7 @@ public class SCPOutputStream extends BufferedOutputStream
 
 			scp.readResponse(session.getStdout());
 
-			this.write("E\n".getBytes());
+			this.write(StringEncoder.GetBytes("E\n"));
 			this.flush();
 		}
 		finally
