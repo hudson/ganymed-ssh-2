@@ -21,9 +21,9 @@ import ch.ethz.ssh2.util.StringEncoder;
 
 /**
  * PEM Support.
- * 
+ *
  * @author Christian Plattner
- * @version 2.50, 03/15/10
+ * @version $Id$
  */
 public class PEMDecoder
 {
@@ -110,12 +110,12 @@ public class PEMDecoder
 		int rfc_1423_padding = buff[buff.length - 1] & 0xff;
 
 		if ((rfc_1423_padding < 1) || (rfc_1423_padding > blockSize))
-			throw new IOException("Decrypted PEM has wrong padding, did you specify the correct password?");
+			throw new PEMDecryptException("Decrypted PEM has wrong padding, did you specify the correct password?");
 
 		for (int i = 2; i <= rfc_1423_padding; i++)
 		{
 			if (buff[buff.length - i] != rfc_1423_padding)
-				throw new IOException("Decrypted PEM has wrong padding, did you specify the correct password?");
+				throw new PEMDecryptException("Decrypted PEM has wrong padding, did you specify the correct password?");
 		}
 
 		byte[] tmp = new byte[buff.length - rfc_1423_padding];
@@ -196,7 +196,7 @@ public class PEMDecoder
 			/* Ignore line */
 		}
 
-		StringBuffer keyData = new StringBuffer();
+		StringBuilder keyData = new StringBuilder();
 
 		while (true)
 		{
@@ -309,6 +309,11 @@ public class PEMDecoder
 			return true;
 
 		return false;
+	}
+
+	public static final boolean isPEMEncrypted(char[] pem) throws IOException
+	{
+		return isPEMEncrypted(parsePEM(pem));
 	}
 
 	public static Object decode(char[] pem, String password) throws IOException
