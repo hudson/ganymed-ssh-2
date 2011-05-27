@@ -39,7 +39,7 @@ import ch.ethz.ssh2.util.TimeoutService.TimeoutToken;
  * </ol>
  * 
  * @author Christian Plattner
- * @version 2.51, 03/15/10
+ * @version $Id$
  */
 
 public class Connection
@@ -47,7 +47,7 @@ public class Connection
 	/**
 	 * The identifier presented to the SSH-2 server.
 	 */
-	public final static String identification = "Ganymed Build_251beta1";
+	private String identification = "Ganymed";
 
 	/* Will be used to generate all random data needed for the current connection.
 	 * Note: SecureRandom.nextBytes() is thread safe.
@@ -132,6 +132,13 @@ public class Connection
 	{
 		this.hostname = hostname;
 		this.port = port;
+	}
+
+	public Connection(String hostname, int port, String identification)
+	{
+		this.hostname = hostname;
+		this.port = port;
+        this.identification = identification;
 	}
 
 	/**
@@ -521,7 +528,7 @@ public class Connection
 		close(t, false);
 	}
 
-	private void close(Throwable t, boolean hard)
+    public void close(Throwable t, boolean hard)
 	{
 		if (cm != null)
 			cm.closeAllChannels();
@@ -650,7 +657,7 @@ public class Connection
 		final TimeoutState state = new TimeoutState();
 
 		tm = new TransportManager(hostname, port);
-
+        tm.setSoTimeout(connectTimeout);
 		tm.setConnectionMonitors(connectionMonitors);
 
 		/* Make sure that the runnable below will observe the new value of "tm"
@@ -685,8 +692,7 @@ public class Connection
 							if (state.isCancelled)
 								return;
 							state.timeoutSocketClosed = true;
-							if (tm != null)
-								tm.close(new SocketTimeoutException("The connect timeout expired"), false);
+							tm.close(new SocketTimeoutException("The connect timeout expired"), false);
 						}
 					}
 				};
@@ -698,7 +704,8 @@ public class Connection
 
 			try
 			{
-				tm.initialize(cryptoWishList, verifier, dhgexpara, connectTimeout, getOrCreateSecureRND(), proxyData);
+				tm.initialize(identification, cryptoWishList, verifier, dhgexpara, connectTimeout,
+                        getOrCreateSecureRND(), proxyData);
 			}
 			catch (SocketTimeoutException se)
 			{
@@ -844,7 +851,7 @@ public class Connection
 	 * There is no limit on the number of concurrent SCP clients.
 	 * <p>
 	 * Note: This factory method will probably disappear in the future.
-	 * 
+	 *
 	 * @return A {@link SCPClient} object.
 	 * @throws IOException
 	 */

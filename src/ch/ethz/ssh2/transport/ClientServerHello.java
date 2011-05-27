@@ -8,14 +8,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.util.StringEncoder;
 
 /**
  * ClientServerHello.
  * 
  * @author Christian Plattner
- * @version 2.50, 03/15/10
+ * @version $Id$
  */
 public class ClientServerHello
 {
@@ -57,9 +56,9 @@ public class ClientServerHello
 		return len;
 	}
 
-	public ClientServerHello(InputStream bi, OutputStream bo) throws IOException
+	public ClientServerHello(String identification, InputStream bi, OutputStream bo) throws IOException
 	{
-		client_line = "SSH-2.0-" + Connection.identification;
+		client_line = "SSH-2.0-" + identification;
 
 		bo.write(StringEncoder.GetBytes(client_line + "\r\n"));
 		bo.flush();
