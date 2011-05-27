@@ -17,6 +17,7 @@ import java.util.Vector;
 
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.Session;
+import ch.ethz.ssh2.channel.Channel;
 import ch.ethz.ssh2.log.Logger;
 import ch.ethz.ssh2.packets.TypesReader;
 import ch.ethz.ssh2.packets.TypesWriter;
@@ -874,6 +875,14 @@ public class SFTPv3Client
 	public int getProtocolVersion()
 	{
 		return protocol_version;
+	}
+
+	/**
+	 * Queries the channel state
+	 * @return True if the underlying session is in open state
+	 */
+	public boolean isConnected() {
+		return sess.getState() == Channel.STATE_OPEN;
 	}
 
 	/**

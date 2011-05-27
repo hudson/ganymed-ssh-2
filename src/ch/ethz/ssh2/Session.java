@@ -92,8 +92,8 @@ public class Session
 	 * @param terminal_modes encoded terminal modes (may be <code>null</code>)
 	 * @throws IOException
 	 */
-	public void requestPTY(String term, int term_width_characters, int term_height_characters, int term_width_pixels, int term_height_pixels, byte[] terminal_modes)
-			throws IOException
+	public void requestPTY(String term, int term_width_characters, int term_height_characters, int term_width_pixels,
+						   int term_height_pixels, byte[] terminal_modes) throws IOException
 	{
 		if (term == null)
 			throw new IllegalArgumentException("TERM cannot be null.");
@@ -116,12 +116,14 @@ public class Session
 				throw new IOException("A PTY was already requested.");
 
 			if (flag_execution_started)
-				throw new IOException("Cannot request PTY at this stage anymore, a remote execution has already started.");
+				throw new IOException(
+						"Cannot request PTY at this stage anymore, a remote execution has already started.");
 
 			flag_pty_requested = true;
 		}
 
-		cm.requestPTY(cn, term, term_width_characters, term_height_characters, term_width_pixels, term_height_pixels, terminal_modes);
+		cm.requestPTY(cn, term, term_width_characters, term_height_characters, term_width_pixels, term_height_pixels,
+				terminal_modes);
 	}
 
 	/**
@@ -156,7 +158,8 @@ public class Session
 				throw new IOException("X11 forwarding was already requested.");
 
 			if (flag_execution_started)
-				throw new IOException("Cannot request X11 forwarding at this stage anymore, a remote execution has already started.");
+				throw new IOException(
+						"Cannot request X11 forwarding at this stage anymore, a remote execution has already started.");
 
 			flag_x11_requested = true;
 		}
@@ -302,6 +305,11 @@ public class Session
 		cm.requestSubSystem(cn, name);
 	}
 
+	public int getState()
+	{
+		return cn.getState();
+	}
+
 	public InputStream getStdout()
 	{
 		return cn.getStdoutStream();
@@ -342,7 +350,8 @@ public class Session
 		if (timeout < 0)
 			throw new IllegalArgumentException("timeout must not be negative!");
 
-		int conditions = cm.waitForCondition(cn, timeout, ChannelCondition.STDOUT_DATA | ChannelCondition.STDERR_DATA | ChannelCondition.EOF);
+		int conditions = cm.waitForCondition(cn, timeout, ChannelCondition.STDOUT_DATA | ChannelCondition.STDERR_DATA
+				| ChannelCondition.EOF);
 
 		if ((conditions & ChannelCondition.TIMEOUT) != 0)
 			return -1;
