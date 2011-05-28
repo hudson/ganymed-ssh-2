@@ -134,7 +134,7 @@ public class ChannelManager implements MessageHandler
 			Thread.currentThread().interrupt();
 	}
 
-	private final void waitForGlobalSuccessOrFailure() throws IOException
+	private void waitForGlobalSuccessOrFailure() throws IOException
 	{
 		boolean wasInterrupted = false;
 
@@ -177,7 +177,7 @@ public class ChannelManager implements MessageHandler
 		}
 	}
 
-	private final void waitForChannelSuccessOrFailure(Channel c) throws IOException
+	private void waitForChannelSuccessOrFailure(Channel c) throws IOException
 	{
 		boolean wasInterrupted = false;
 

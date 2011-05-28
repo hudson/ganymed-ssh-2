@@ -24,6 +24,7 @@ public final class ChannelOutputStream extends OutputStream
 		this.c = c;
 	}
 
+	@Override
 	public void write(int b) throws IOException
 	{	
 		byte[] buff = new byte[1];
@@ -33,6 +34,7 @@ public final class ChannelOutputStream extends OutputStream
 		write(buff, 0, 1);
 	}
 
+	@Override
 	public void close() throws IOException
 	{
 		if (isClosed == false)
@@ -42,6 +44,7 @@ public final class ChannelOutputStream extends OutputStream
 		}
 	}
 
+	@Override
 	public void flush() throws IOException
 	{
 		if (isClosed)
@@ -50,6 +53,7 @@ public final class ChannelOutputStream extends OutputStream
 		/* This is a no-op, since this stream is unbuffered */
 	}
 
+	@Override
 	public void write(byte[] b, int off, int len) throws IOException
 	{
 		if (isClosed)
@@ -67,6 +71,7 @@ public final class ChannelOutputStream extends OutputStream
 		c.cm.sendData(c, b, off, len);
 	}
 
+	@Override
 	public void write(byte[] b) throws IOException
 	{
 		write(b, 0, b.length);

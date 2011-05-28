@@ -192,7 +192,7 @@ public class KnownHosts
 		return dig;
 	}
 
-	private final boolean checkHashed(String entry, String hostname)
+	private boolean checkHashed(String entry, String hostname)
 	{
 		if (entry.startsWith("|1|") == false)
 		{
@@ -481,7 +481,7 @@ public class KnownHosts
 		initialize(cw.toCharArray());
 	}
 
-	private final boolean matchKeys(Object key1, Object key2)
+	private boolean matchKeys(Object key1, Object key2)
 	{
 		if ((key1 instanceof RSAPublicKey) && (key2 instanceof RSAPublicKey))
 		{
@@ -532,7 +532,7 @@ public class KnownHosts
 		return false;
 	}
 
-	private final boolean pseudoRegex(char[] pattern, int i, char[] match, int j)
+	private boolean pseudoRegex(char[] pattern, int i, char[] match, int j)
 	{
 		/* This matching logic is equivalent to the one present in OpenSSH 4.1 */
 

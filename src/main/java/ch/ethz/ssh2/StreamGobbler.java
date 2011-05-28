@@ -126,6 +126,7 @@ public class StreamGobbler extends InputStream
 		t.start();
 	}
 
+	@Override
 	public int read() throws IOException
 	{
 		boolean wasInterrupted = false;
@@ -164,6 +165,7 @@ public class StreamGobbler extends InputStream
 		}
 	}
 
+	@Override
 	public int available() throws IOException
 	{
 		synchronized (synchronizer)
@@ -175,11 +177,13 @@ public class StreamGobbler extends InputStream
 		}
 	}
 
+	@Override
 	public int read(byte[] b) throws IOException
 	{
 		return read(b, 0, b.length);
 	}
 
+	@Override
 	public void close() throws IOException
 	{
 		synchronized (synchronizer)
@@ -193,6 +197,7 @@ public class StreamGobbler extends InputStream
 		}
 	}
 
+	@Override
 	public int read(byte[] b, int off, int len) throws IOException
 	{
 		if (b == null)

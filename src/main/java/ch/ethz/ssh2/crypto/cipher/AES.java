@@ -366,7 +366,7 @@ public class AES implements BlockCipher
 			0xca81f3af, 0xb93ec468, 0x382c3424, 0xc25f40a3, 0x1672c31d, 0xbc0c25e2, 0x288b493c, 0xff41950d, 0x397101a8,
 			0x08deb30c, 0xd89ce4b4, 0x6490c156, 0x7b6184cb, 0xd570b632, 0x48745c6c, 0xd04257b8 };
 
-	private final int shift(int r, int shift)
+	private int shift(int r, int shift)
 	{
 		return (((r >>> shift) | (r << (32 - shift))));
 	}
@@ -377,7 +377,7 @@ public class AES implements BlockCipher
 	private static final int m2 = 0x7f7f7f7f;
 	private static final int m3 = 0x0000001b;
 
-	private final int FFmulX(int x)
+	private int FFmulX(int x)
 	{
 		return (((x & m2) << 1) ^ (((x & m1) >>> 7) * m3));
 	}
@@ -394,7 +394,7 @@ public class AES implements BlockCipher
 	 * 
 	 */
 
-	private final int inv_mcol(int x)
+	private int inv_mcol(int x)
 	{
 		int f2 = FFmulX(x);
 		int f4 = FFmulX(f2);
@@ -404,7 +404,7 @@ public class AES implements BlockCipher
 		return f2 ^ f4 ^ f8 ^ shift(f2 ^ f9, 8) ^ shift(f4 ^ f9, 16) ^ shift(f9, 24);
 	}
 
-	private final int subWord(int x)
+	private int subWord(int x)
 	{
 		return (S[x & 255] & 255 | ((S[(x >> 8) & 255] & 255) << 8) | ((S[(x >> 16) & 255] & 255) << 16) | S[(x >> 24) & 255] << 24);
 	}
@@ -415,7 +415,7 @@ public class AES implements BlockCipher
 	 * key sizes 128/192/256 bits This code is written assuming those are the
 	 * only possible values
 	 */
-	private final int[][] generateWorkingKey(byte[] key, boolean forEncryption)
+	private int[][] generateWorkingKey(byte[] key, boolean forEncryption)
 	{
 		int KC = key.length / 4; // key length in words
 		int t;
@@ -553,7 +553,7 @@ public class AES implements BlockCipher
 	{
 	}
 
-	private final void unpackBlock(byte[] bytes, int off)
+	private void unpackBlock(byte[] bytes, int off)
 	{
 		int index = off;
 
@@ -578,7 +578,7 @@ public class AES implements BlockCipher
 		C3 |= bytes[index++] << 24;
 	}
 
-	private final void packBlock(byte[] bytes, int off)
+	private void packBlock(byte[] bytes, int off)
 	{
 		int index = off;
 
@@ -603,7 +603,7 @@ public class AES implements BlockCipher
 		bytes[index++] = (byte) (C3 >> 24);
 	}
 
-	private final void encryptBlock(int[][] KW)
+	private void encryptBlock(int[][] KW)
 	{
 		int r, r0, r1, r2, r3;
 
@@ -643,7 +643,7 @@ public class AES implements BlockCipher
 
 	}
 
-	private final void decryptBlock(int[][] KW)
+	private void decryptBlock(int[][] KW)
 	{
 		int r, r0, r1, r2, r3;
 

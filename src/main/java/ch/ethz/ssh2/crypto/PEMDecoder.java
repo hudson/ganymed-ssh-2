@@ -30,7 +30,7 @@ public class PEMDecoder
 	private static final int PEM_RSA_PRIVATE_KEY = 1;
 	private static final int PEM_DSA_PRIVATE_KEY = 2;
 
-	private static final int hexToInt(char c)
+	private static int hexToInt(char c)
 	{
 		if ((c >= 'a') && (c <= 'f'))
 		{
@@ -123,7 +123,7 @@ public class PEMDecoder
 		return tmp;
 	}
 
-	private static final PEMStructure parsePEM(char[] pem) throws IOException
+	private static PEMStructure parsePEM(char[] pem) throws IOException
 	{
 		PEMStructure ps = new PEMStructure();
 
@@ -224,7 +224,7 @@ public class PEMDecoder
 		return ps;
 	}
 
-	private static final void decryptPEM(PEMStructure ps, byte[] pw) throws IOException
+	private static void decryptPEM(PEMStructure ps, byte[] pw) throws IOException
 	{
 		if (ps.dekInfo == null)
 			throw new IOException("Broken PEM, no mode and salt given, but encryption enabled");

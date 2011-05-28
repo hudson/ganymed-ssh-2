@@ -121,10 +121,8 @@ public class SimpleDERReader
 			throw new IOException("Illegal len in DER object (" + len  + ")");
 
 		byte[] b = readBytes(len);
-		
-		BigInteger bi = new BigInteger(b);
-		
-		return bi;
+
+		return new BigInteger(b);
 	}
 
 	public byte[] readSequenceAsByteArray() throws IOException
@@ -139,9 +137,7 @@ public class SimpleDERReader
 		if ((len < 0) || len > available())
 			throw new IOException("Illegal len in DER object (" + len  + ")");
 
-		byte[] b = readBytes(len);
-
-		return b;
+		return readBytes(len);
 	}
 	
 	public byte[] readOctetString() throws IOException
@@ -156,9 +152,7 @@ public class SimpleDERReader
 		if ((len < 0) || len > available())
 			throw new IOException("Illegal len in DER object (" + len  + ")");
 
-		byte[] b = readBytes(len);
-
-		return b;
+		return readBytes(len);
 	}
 
 }

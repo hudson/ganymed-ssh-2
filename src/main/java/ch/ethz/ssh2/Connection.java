@@ -1029,7 +1029,7 @@ public class Connection
 		return false;
 	}
 
-	private final SecureRandom getOrCreateSecureRND()
+	private SecureRandom getOrCreateSecureRND()
 	{
 		if (generator == null)
 			generator = new SecureRandom();
