@@ -43,11 +43,11 @@ public class Logger
 	{
 		if (level <= 20)
 		{
-			org.apache.log4j.Logger.getLogger(className).warn(message);
+			java.util.logging.Logger.getLogger(className).warning(message);
 		}
 		else
 		{
-			org.apache.log4j.Logger.getLogger(className).debug(message);
+			java.util.logging.Logger.getLogger(className).fine(message);
 		}
 	}
 }
