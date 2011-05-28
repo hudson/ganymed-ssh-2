@@ -104,7 +104,7 @@ public class Connection
 
 	private ProxyData proxyData = null;
 
-	private Vector connectionMonitors = new Vector();
+	private Vector<ConnectionMonitor> connectionMonitors = new Vector<ConnectionMonitor>();
 
 	/**
 	 * Prepares a fresh <code>Connection</code> object which can then be used

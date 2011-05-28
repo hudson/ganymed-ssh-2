@@ -39,18 +39,18 @@ import ch.ethz.ssh2.transport.TransportManager;
  */
 public class AuthenticationManager implements MessageHandler
 {
-	TransportManager tm;
+	private TransportManager tm;
 
-	Vector packets = new Vector();
-	boolean connectionClosed = false;
+	private final Vector<byte[]> packets = new Vector<byte[]>();
+	private boolean connectionClosed = false;
 
-	String banner;
+	private String banner;
 
-	String[] remainingMethods = new String[0];
-	boolean isPartialSuccess = false;
+	private String[] remainingMethods = new String[0];
+	private boolean isPartialSuccess = false;
 
-	boolean authenticated = false;
-	boolean initDone = false;
+	private boolean authenticated = false;
+	private boolean initDone = false;
 
 	public AuthenticationManager(TransportManager tm)
 	{

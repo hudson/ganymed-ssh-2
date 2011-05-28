@@ -697,7 +697,7 @@ public class SFTPv3Client
 		throw new SFTPException(errorMessage, errorCode);
 	}
 
-	private List scanDirectory(byte[] handle) throws IOException
+	private List<SFTPv3DirectoryEntry> scanDirectory(byte[] handle) throws IOException
 	{
 		List<SFTPv3DirectoryEntry> files = new Vector<SFTPv3DirectoryEntry>();
 
@@ -905,10 +905,10 @@ public class SFTPv3Client
 	 * @return A Vector containing {@link SFTPv3DirectoryEntry} objects.
 	 * @throws IOException
 	 */
-	public List ls(String dirName) throws IOException
+	public List<SFTPv3DirectoryEntry> ls(String dirName) throws IOException
 	{
 		byte[] handle = openDirectory(dirName).fileHandle;
-		List result = scanDirectory(handle);
+		List<SFTPv3DirectoryEntry> result = scanDirectory(handle);
 		closeHandle(handle);
 		return result;
 	}

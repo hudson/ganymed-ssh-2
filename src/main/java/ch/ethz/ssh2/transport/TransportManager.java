@@ -100,7 +100,7 @@ public class TransportManager
 						}
 					}
 
-					msg = (byte[]) asynchronousQueue.remove(0);
+					msg = asynchronousQueue.remove(0);
 				}
 
 				/* The following invocation may throw an IOException.
@@ -145,7 +145,7 @@ public class TransportManager
 
 	private Thread receiveThread;
 
-	private Vector connectionMonitors = new Vector();
+	private Vector<ConnectionMonitor> connectionMonitors = new Vector<ConnectionMonitor>();
 	private boolean monitorsWereInformed = false;
 
 	/**
@@ -318,7 +318,7 @@ public class TransportManager
 
 		/* No check if we need to inform the monitors */
 
-		Vector monitors = null;
+		Vector<ConnectionMonitor> monitors = null;
 
 		synchronized (this)
 		{
@@ -330,7 +330,7 @@ public class TransportManager
 			if (monitorsWereInformed == false)
 			{
 				monitorsWereInformed = true;
-				monitors = (Vector) connectionMonitors.clone();
+				monitors = (Vector<ConnectionMonitor>) connectionMonitors.clone();
 			}
 		}
 
@@ -340,7 +340,7 @@ public class TransportManager
 			{
 				try
 				{
-					ConnectionMonitor cmon = (ConnectionMonitor) monitors.elementAt(i);
+					ConnectionMonitor cmon = monitors.elementAt(i);
 					cmon.connectionLost(reasonClosedCause);
 				}
 				catch (Exception ignore)
@@ -523,7 +523,7 @@ public class TransportManager
 
 				for (int i = 0; i < messageHandlers.size(); i++)
 				{
-					HandlerEntry he = (HandlerEntry) messageHandlers.get(i);
+					HandlerEntry he = messageHandlers.get(i);
 					try
 					{
 						he.mh.handleMessage(null, 0);
@@ -645,11 +645,11 @@ public class TransportManager
 		}
 	}
 
-	public void setConnectionMonitors(Vector monitors)
+	public void setConnectionMonitors(Vector<ConnectionMonitor> monitors)
 	{
 		synchronized (this)
 		{
-			connectionMonitors = (Vector) monitors.clone();
+			connectionMonitors = (Vector<ConnectionMonitor>) monitors.clone();
 		}
 	}
 

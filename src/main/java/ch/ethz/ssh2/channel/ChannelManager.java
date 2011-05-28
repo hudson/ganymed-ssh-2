@@ -42,7 +42,7 @@ public class ChannelManager implements MessageHandler
 
 	private TransportManager tm;
 
-	private Vector channels = new Vector();
+	private final Vector<Channel> channels = new Vector<Channel>();
 	private int nextLocalChannel = 100;
 	private boolean shutdown = false;
 	private int globalSuccessCounter = 0;
@@ -50,7 +50,7 @@ public class ChannelManager implements MessageHandler
 
 	private HashMap remoteForwardings = new HashMap();
 
-	private Vector listenerThreads = new Vector();
+	private final Vector<IChannelWorkerThread> listenerThreads = new Vector<IChannelWorkerThread>();
 
 	private boolean listenerThreadsAllowed = true;
 
@@ -66,7 +66,7 @@ public class ChannelManager implements MessageHandler
 		{
 			for (int i = 0; i < channels.size(); i++)
 			{
-				Channel c = (Channel) channels.elementAt(i);
+				Channel c = channels.elementAt(i);
 				if (c.localID == id)
 					return c;
 			}
@@ -80,7 +80,7 @@ public class ChannelManager implements MessageHandler
 		{
 			for (int i = 0; i < channels.size(); i++)
 			{
-				Channel c = (Channel) channels.elementAt(i);
+				Channel c = channels.elementAt(i);
 				if (c.localID == id)
 				{
 					channels.removeElementAt(i);
@@ -244,7 +244,7 @@ public class ChannelManager implements MessageHandler
 		if (log.isEnabled())
 			log.log(50, "Closing all X11 channels for the given fake cookie");
 
-		Vector channel_copy;
+		Vector<Channel> channel_copy;
 
 		synchronized (channels)
 		{
@@ -253,7 +253,7 @@ public class ChannelManager implements MessageHandler
 
 		for (int i = 0; i < channel_copy.size(); i++)
 		{
-			Channel c = (Channel) channel_copy.elementAt(i);
+			Channel c = channel_copy.elementAt(i);
 
 			synchronized (c)
 			{
@@ -286,7 +286,7 @@ public class ChannelManager implements MessageHandler
 		if (log.isEnabled())
 			log.log(50, "Closing all channels");
 
-		Vector channel_copy;
+		Vector<Channel> channel_copy;
 
 		synchronized (channels)
 		{
@@ -295,7 +295,7 @@ public class ChannelManager implements MessageHandler
 
 		for (int i = 0; i < channel_copy.size(); i++)
 		{
-			Channel c = (Channel) channel_copy.elementAt(i);
+			Channel c = channel_copy.elementAt(i);
 			try
 			{
 				closeChannel(c, "Closing all channels", true);
@@ -1581,7 +1581,7 @@ public class ChannelManager implements MessageHandler
 			{
 				for (int i = 0; i < listenerThreads.size(); i++)
 				{
-					IChannelWorkerThread lat = (IChannelWorkerThread) listenerThreads.elementAt(i);
+					IChannelWorkerThread lat = listenerThreads.elementAt(i);
 					lat.stopWorking();
 				}
 				listenerThreadsAllowed = false;
@@ -1593,7 +1593,7 @@ public class ChannelManager implements MessageHandler
 
 				for (int i = 0; i < channels.size(); i++)
 				{
-					Channel c = (Channel) channels.elementAt(i);
+					Channel c = channels.elementAt(i);
 					synchronized (c)
 					{
 						c.EOF = true;
