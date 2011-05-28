@@ -7,8 +7,23 @@
     <packaging>jar</packaging>
     <version>260</version>
     <name>ganymed-ssh-2</name>
+    <developers>
+        <developer>
+            <name>Christian Plattner</name>
+            <id>cleondris</id>
+            <email>info@cleondris.ch</email>
+            <organization>Cleondris GmbH</organization>
+        </developer>
+        <developer>
+            <name>David Kocher</name>
+            <id>dkocher</id>
+            <email>dkocher@sudo.ch</email>
+            <organization>iterate GmbH</organization>
+        </developer>
+    </developers>
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compile.source>1.5</maven.compile.source>
+        <maven.compile.target>1.5</maven.compile.target>
     </properties>
     <repositories/>
     <pluginRepositories/>
@@ -26,8 +41,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>${maven.compile.source}</source>
+                    <target>${maven.compile.target}</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
