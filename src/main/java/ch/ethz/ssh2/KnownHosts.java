@@ -2,6 +2,7 @@
  * Copyright (c) 2006-2011 Christian Plattner. All rights reserved.
  * Please refer to the LICENSE.txt for licensing details.
  */
+
 package ch.ethz.ssh2;
 
 import java.io.BufferedReader;
@@ -628,10 +629,10 @@ public class KnownHosts
 				{
 					return null;
 				}
-
-				/* OK, we found the same algo again, optimize */
-
-				continue;
+			}
+			else
+			{
+				preferredAlgo = thisAlgo;
 			}
 		}
 
@@ -656,10 +657,10 @@ public class KnownHosts
 
 		if (preferredAlgo.equals("ssh-rsa"))
 		{
-			return new String[]{"ssh-rsa", "ssh-dss"};
+			return new String[] { "ssh-rsa", "ssh-dss" };
 		}
 
-		return new String[]{"ssh-dss", "ssh-rsa"};
+		return new String[] { "ssh-dss", "ssh-rsa" };
 	}
 
 	/**
@@ -743,7 +744,7 @@ public class KnownHosts
 	 * @throws IOException
 	 */
 	public final static void addHostkeyToFile(File knownHosts, String[] hostnames, String serverHostKeyAlgorithm,
-											  byte[] serverHostKey) throws IOException
+			byte[] serverHostKey) throws IOException
 	{
 		if ((hostnames == null) || (hostnames.length == 0))
 		{
