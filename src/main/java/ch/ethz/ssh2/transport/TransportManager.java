@@ -2,6 +2,7 @@
  * Copyright (c) 2006-2011 Christian Plattner. All rights reserved.
  * Please refer to the LICENSE.txt for licensing details.
  */
+
 package ch.ethz.ssh2.transport;
 
 import java.io.IOException;
@@ -318,7 +319,7 @@ public class TransportManager
 
 		/* No check if we need to inform the monitors */
 
-		Vector<ConnectionMonitor> monitors = null;
+		Vector<ConnectionMonitor> monitors = new Vector<ConnectionMonitor>();
 
 		synchronized (this)
 		{
@@ -330,22 +331,18 @@ public class TransportManager
 			if (monitorsWereInformed == false)
 			{
 				monitorsWereInformed = true;
-				monitors = (Vector<ConnectionMonitor>) connectionMonitors.clone();
+				monitors.addAll(connectionMonitors);
 			}
 		}
 
-		if (monitors != null)
+		for (ConnectionMonitor cmon : monitors)
 		{
-			for (int i = 0; i < monitors.size(); i++)
+			try
 			{
-				try
-				{
-					ConnectionMonitor cmon = monitors.elementAt(i);
-					cmon.connectionLost(reasonClosedCause);
-				}
-				catch (Exception ignore)
-				{
-				}
+				cmon.connectionLost(reasonClosedCause);
+			}
+			catch (Exception ignore)
+			{
 			}
 		}
 	}
@@ -466,8 +463,8 @@ public class TransportManager
 		throw new IOException("Unsupported ProxyData");
 	}
 
-	public void initialize(String identification, CryptoWishList cwl, ServerHostKeyVerifier verifier, DHGexParameters dhgex,
-						   int connectTimeout, SecureRandom rnd, ProxyData proxyData) throws IOException
+	public void initialize(String identification, CryptoWishList cwl, ServerHostKeyVerifier verifier,
+			DHGexParameters dhgex, int connectTimeout, SecureRandom rnd, ProxyData proxyData) throws IOException
 	{
 		/* First, establish the TCP connection to the SSH-2 server */
 
@@ -649,7 +646,8 @@ public class TransportManager
 	{
 		synchronized (this)
 		{
-			connectionMonitors = (Vector<ConnectionMonitor>) monitors.clone();
+			connectionMonitors = new Vector<ConnectionMonitor>();
+			connectionMonitors.addAll(monitors);
 		}
 	}
 
