@@ -72,7 +72,7 @@ public class RemoteAcceptThread extends Thread
 				{
 					r2l.join();
 				}
-				catch (InterruptedException e)
+				catch (InterruptedException ignored)
 				{
 				}
 			}
@@ -90,7 +90,7 @@ public class RemoteAcceptThread extends Thread
 			{
 				c.cm.closeChannel(c, "IOException in proxy code (" + e.getMessage() + ")", true);
 			}
-			catch (IOException e1)
+			catch (IOException ignored)
 			{
 			}
 			try
@@ -98,7 +98,7 @@ public class RemoteAcceptThread extends Thread
 				if (s != null)
 					s.close();
 			}
-			catch (IOException e1)
+			catch (IOException ignored)
 			{
 			}
 		}

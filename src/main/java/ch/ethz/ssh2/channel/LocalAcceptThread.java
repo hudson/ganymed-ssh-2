@@ -132,7 +132,7 @@ public class LocalAcceptThread extends Thread implements IChannelWorkerThread
 			/* This will lead to an IOException in the ss.accept() call */
 			ss.close();
 		}
-		catch (IOException e)
+		catch (IOException ignored)
 		{
 		}
 	}

@@ -60,7 +60,7 @@ public class StreamForwarder extends Thread
 				c.cm.closeChannel(c, "Closed due to exception in StreamForwarder (" + mode + "): "
 						+ ignore.getMessage(), true);
 			}
-			catch (IOException e)
+			catch (IOException ignored)
 			{
 			}
 		}
@@ -70,14 +70,14 @@ public class StreamForwarder extends Thread
 			{
 				os.close();
 			}
-			catch (IOException e1)
+			catch (IOException ignored)
 			{
 			}
 			try
 			{
 				is.close();
 			}
-			catch (IOException e2)
+			catch (IOException ignored)
 			{
 			}
 
@@ -89,7 +89,7 @@ public class StreamForwarder extends Thread
 					{
 						sibling.join();
 					}
-					catch (InterruptedException e)
+					catch (InterruptedException ignored)
 					{
 					}
 				}
@@ -98,7 +98,7 @@ public class StreamForwarder extends Thread
 				{
 					c.cm.closeChannel(c, "StreamForwarder (" + mode + ") is cleaning up the connection", true);
 				}
-				catch (IOException e3)
+				catch (IOException ignored)
 				{
 				}
 
@@ -107,7 +107,7 @@ public class StreamForwarder extends Thread
 					if (s != null)
 						s.close();
 				}
-				catch (IOException e1)
+				catch (IOException ignored)
 				{
 				}
 			}

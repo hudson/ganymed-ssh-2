@@ -263,7 +263,7 @@ public class ChannelManager implements MessageHandler
 			{
 				closeChannel(c, "Closing X11 channel since the corresponding session is closing", true);
 			}
-			catch (IOException e)
+			catch (IOException ignored)
 			{
 			}
 		}
@@ -297,7 +297,7 @@ public class ChannelManager implements MessageHandler
 			{
 				closeChannel(c, "Closing all channels", true);
 			}
-			catch (IOException e)
+			catch (IOException ignored)
 			{
 			}
 		}

@@ -513,7 +513,7 @@ public class TransportManager
 					{
 						km.handleMessage(null, 0);
 					}
-					catch (IOException e)
+					catch (IOException ignored)
 					{
 					}
 				}

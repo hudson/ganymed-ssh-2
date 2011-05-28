@@ -212,7 +212,7 @@ public class RemoteX11AcceptThread extends Thread
 				{
 					r2l.join();
 				}
-				catch (InterruptedException e)
+				catch (InterruptedException ignored)
 				{
 				}
 			}
@@ -230,7 +230,7 @@ public class RemoteX11AcceptThread extends Thread
 			{
 				c.cm.closeChannel(c, "IOException in X11 proxy code (" + e.getMessage() + ")", true);
 			}
-			catch (IOException e1)
+			catch (IOException ignored)
 			{
 			}
 			try
@@ -238,7 +238,7 @@ public class RemoteX11AcceptThread extends Thread
 				if (s != null)
 					s.close();
 			}
-			catch (IOException e1)
+			catch (IOException ignored)
 			{
 			}
 		}
