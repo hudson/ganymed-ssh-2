@@ -314,12 +314,12 @@ public class KexManager
 		tm.kexFinished();
 	}
 
-	public static final String[] getDefaultServerHostkeyAlgorithmList()
+	public static String[] getDefaultServerHostkeyAlgorithmList()
 	{
 		return new String[] { "ssh-rsa", "ssh-dss" };
 	}
 
-	public static final void checkServerHostkeyAlgorithmsList(String[] algos)
+	public static void checkServerHostkeyAlgorithmsList(String[] algos)
 	{
 		for (int i = 0; i < algos.length; i++)
 		{
@@ -328,13 +328,13 @@ public class KexManager
 		}
 	}
 
-	public static final String[] getDefaultKexAlgorithmList()
+	public static String[] getDefaultKexAlgorithmList()
 	{
 		return new String[] { "diffie-hellman-group-exchange-sha1", "diffie-hellman-group14-sha1",
 				"diffie-hellman-group1-sha1" };
 	}
 
-	public static final void checkKexAlgorithmList(String[] algos)
+	public static void checkKexAlgorithmList(String[] algos)
 	{
 		for (int i = 0; i < algos.length; i++)
 		{

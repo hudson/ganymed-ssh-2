@@ -23,7 +23,7 @@ public class ClientServerHello
 
 	String server_versioncomment;
 
-	public final static int readLineRN(InputStream is, byte[] buffer) throws IOException
+	public static int readLineRN(InputStream is, byte[] buffer) throws IOException
 	{
 		int pos = 0;
 		boolean need10 = false;

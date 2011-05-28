@@ -15,20 +15,20 @@ public final class MAC
 	Digest mac;
 	int size;
 
-	public final static String[] getMacList()
+	public static String[] getMacList()
 	{
 		/* Higher Priority First */
 
 		return new String[] { "hmac-sha1-96", "hmac-sha1", "hmac-md5-96", "hmac-md5" };
 	}
 
-	public final static void checkMacList(String[] macs)
+	public static void checkMacList(String[] macs)
 	{
 		for (int i = 0; i < macs.length; i++)
 			getKeyLen(macs[i]);
 	}
 
-	public final static int getKeyLen(String type)
+	public static int getKeyLen(String type)
 	{
 		if (type.equals("hmac-sha1"))
 			return 20;

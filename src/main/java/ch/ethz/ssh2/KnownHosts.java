@@ -156,7 +156,7 @@ public class KnownHosts
 	 * @param hostname
 	 * @return the hashed representation, e.g., "|1|cDhrv7zwEUV3k71CEPHnhHZezhA=|Xo+2y6rUXo2OIWRAYhBOIijbJMA="
 	 */
-	public static final String createHashedHostname(String hostname)
+	public static String createHashedHostname(String hostname)
 	{
 		SHA1 sha1 = new SHA1();
 
@@ -172,7 +172,7 @@ public class KnownHosts
 		return new String("|1|" + base64_salt + "|" + base64_hash);
 	}
 
-	private static final byte[] hmacSha1Hash(byte[] salt, String hostname)
+	private static byte[] hmacSha1Hash(byte[] salt, String hostname)
 	{
 		SHA1 sha1 = new SHA1();
 
@@ -333,7 +333,7 @@ public class KnownHosts
 		return null;
 	}
 
-	private final boolean hostnameMatches(String[] hostpatterns, String hostname)
+	private boolean hostnameMatches(String[] hostpatterns, String hostname)
 	{
 		boolean isMatch = false;
 		boolean negate = false;
@@ -744,7 +744,7 @@ public class KnownHosts
 	 * @param serverHostKey as passed to the {@link ServerHostKeyVerifier}.
 	 * @throws IOException
 	 */
-	public final static void addHostkeyToFile(File knownHosts, String[] hostnames, String serverHostKeyAlgorithm,
+	public static void addHostkeyToFile(File knownHosts, String[] hostnames, String serverHostKeyAlgorithm,
 			byte[] serverHostKey) throws IOException
 	{
 		if ((hostnames == null) || (hostnames.length == 0))
@@ -802,7 +802,7 @@ public class KnownHosts
 	 * @param hostkey the hostkey
 	 * @return the raw fingerprint
 	 */
-	static final private byte[] rawFingerPrint(String type, String keyType, byte[] hostkey)
+	static private byte[] rawFingerPrint(String type, String keyType, byte[] hostkey)
 	{
 		Digest dig = null;
 
@@ -847,7 +847,7 @@ public class KnownHosts
 	 * @param fingerprint raw fingerprint
 	 * @return the hex representation
 	 */
-	static final private String rawToHexFingerprint(byte[] fingerprint)
+	static private String rawToHexFingerprint(byte[] fingerprint)
 	{
 		final char[] alpha = "0123456789abcdef".toCharArray();
 
@@ -873,7 +873,7 @@ public class KnownHosts
 	 * @param raw raw fingerprint
 	 * @return the bubblebabble representation
 	 */
-	static final private String rawToBubblebabbleFingerprint(byte[] raw)
+	static private String rawToBubblebabbleFingerprint(byte[] raw)
 	{
 		final char[] v = "aeiouy".toCharArray();
 		final char[] c = "bcdfghklmnprstvzx".toCharArray();
@@ -926,7 +926,7 @@ public class KnownHosts
 	 * @param publickey key blob
 	 * @return Hex fingerprint
 	 */
-	public final static String createHexFingerprint(String keytype, byte[] publickey)
+	public static String createHexFingerprint(String keytype, byte[] publickey)
 	{
 		byte[] raw = rawFingerPrint("md5", keytype, publickey);
 		return rawToHexFingerprint(raw);
@@ -943,7 +943,7 @@ public class KnownHosts
 	 * @param publickey key data
 	 * @return Bubblebabble fingerprint
 	 */
-	public final static String createBubblebabbleFingerprint(String keytype, byte[] publickey)
+	public static String createBubblebabbleFingerprint(String keytype, byte[] publickey)
 	{
 		byte[] raw = rawFingerPrint("sha1", keytype, publickey);
 		return rawToBubblebabbleFingerprint(raw);

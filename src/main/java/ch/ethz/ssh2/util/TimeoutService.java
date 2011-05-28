@@ -107,7 +107,7 @@ public class TimeoutService
 	 * @param handler
 	 * @return a TimeoutToken that can be used to cancel the timeout.
 	 */
-	public static final TimeoutToken addTimeoutHandler(long runTime, Runnable handler)
+	public static TimeoutToken addTimeoutHandler(long runTime, Runnable handler)
 	{
 		TimeoutToken token = new TimeoutToken(runTime, handler);
 
@@ -140,7 +140,7 @@ public class TimeoutService
 		return token;
 	}
 
-	public static final void cancelTimeoutHandler(TimeoutToken token)
+	public static void cancelTimeoutHandler(TimeoutToken token)
 	{
 		synchronized (todolist)
 		{
