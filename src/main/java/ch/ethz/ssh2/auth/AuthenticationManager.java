@@ -6,6 +6,7 @@ package ch.ethz.ssh2.auth;
 
 import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.List;
 import java.util.Vector;
 
 import ch.ethz.ssh2.InteractiveCallback;
@@ -41,7 +42,7 @@ public class AuthenticationManager implements MessageHandler
 {
 	private TransportManager tm;
 
-	private final Vector<byte[]> packets = new Vector<byte[]>();
+	private final List<byte[]> packets = new Vector<byte[]>();
 	private boolean connectionClosed = false;
 
 	private String banner;
@@ -93,9 +94,8 @@ public class AuthenticationManager implements MessageHandler
 						wasInterrupted = true;
 					}
 				}
-				/* This sequence works with J2ME */
-				byte[] res = (byte[]) packets.firstElement();
-				packets.removeElementAt(0);
+				byte[] res = packets.get(0);
+				packets.remove(0);
 				return res;
 			}
 		}
@@ -423,7 +423,7 @@ public class AuthenticationManager implements MessageHandler
 			{
 				byte[] tmp = new byte[msglen];
 				System.arraycopy(msg, 0, tmp, 0, msglen);
-				packets.addElement(tmp);
+				packets.add(tmp);
 			}
 
 			packets.notifyAll();

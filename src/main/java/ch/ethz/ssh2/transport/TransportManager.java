@@ -146,7 +146,7 @@ public class TransportManager
 
 	private Thread receiveThread;
 
-	private Vector<ConnectionMonitor> connectionMonitors = new Vector<ConnectionMonitor>();
+	private List<ConnectionMonitor> connectionMonitors = new Vector<ConnectionMonitor>();
 	private boolean monitorsWereInformed = false;
 
 	/**
@@ -319,7 +319,7 @@ public class TransportManager
 
 		/* No check if we need to inform the monitors */
 
-		Vector<ConnectionMonitor> monitors = new Vector<ConnectionMonitor>();
+		List<ConnectionMonitor> monitors = new Vector<ConnectionMonitor>();
 
 		synchronized (this)
 		{
@@ -641,7 +641,7 @@ public class TransportManager
 		}
 	}
 
-	public void setConnectionMonitors(Vector<ConnectionMonitor> monitors)
+	public void setConnectionMonitors(List<ConnectionMonitor> monitors)
 	{
 		synchronized (this)
 		{

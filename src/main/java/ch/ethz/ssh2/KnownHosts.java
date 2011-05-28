@@ -16,6 +16,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.SecureRandom;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 import ch.ethz.ssh2.crypto.Base64;
@@ -267,9 +268,9 @@ public class KnownHosts
 		return result;
 	}
 
-	private Vector<Object> getAllKeys(String hostname)
+	private List<Object> getAllKeys(String hostname)
 	{
-		Vector<Object> keys = new Vector<Object>();
+		List<Object> keys = new Vector<Object>();
 
 		synchronized (publicKeys)
 		{
@@ -602,7 +603,7 @@ public class KnownHosts
 	{
 		String preferredAlgo = null;
 
-		Vector<Object> keys = getAllKeys(hostname);
+		List<Object> keys = getAllKeys(hostname);
 
 		for (Object key : keys)
 		{

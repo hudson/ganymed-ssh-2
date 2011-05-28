@@ -4,6 +4,8 @@
  */
 package ch.ethz.ssh2.crypto.cipher;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -14,7 +16,7 @@ import java.util.Vector;
  */
 public class BlockCipherFactory
 {
-	static class CipherEntry
+	private static final class CipherEntry
 	{
 		String type;
 		int blocksize;
@@ -30,34 +32,33 @@ public class BlockCipherFactory
 		}
 	}
 
-	static Vector<CipherEntry> ciphers = new Vector<CipherEntry>();
+	private static final List<CipherEntry> ciphers = new Vector<CipherEntry>();
 
 	static
 	{
 		/* Higher Priority First */
-		ciphers.addElement(new CipherEntry("aes128-ctr", 16, 16, "ch.ethz.ssh2.crypto.cipher.AES"));
-		ciphers.addElement(new CipherEntry("aes192-ctr", 16, 24, "ch.ethz.ssh2.crypto.cipher.AES"));
-		ciphers.addElement(new CipherEntry("aes256-ctr", 16, 32, "ch.ethz.ssh2.crypto.cipher.AES"));
-		ciphers.addElement(new CipherEntry("blowfish-ctr", 8, 16, "ch.ethz.ssh2.crypto.cipher.BlowFish"));
+		ciphers.add(new CipherEntry("aes128-ctr", 16, 16, "ch.ethz.ssh2.crypto.cipher.AES"));
+		ciphers.add(new CipherEntry("aes192-ctr", 16, 24, "ch.ethz.ssh2.crypto.cipher.AES"));
+		ciphers.add(new CipherEntry("aes256-ctr", 16, 32, "ch.ethz.ssh2.crypto.cipher.AES"));
+		ciphers.add(new CipherEntry("blowfish-ctr", 8, 16, "ch.ethz.ssh2.crypto.cipher.BlowFish"));
 
-		ciphers.addElement(new CipherEntry("aes128-cbc", 16, 16, "ch.ethz.ssh2.crypto.cipher.AES"));
-		ciphers.addElement(new CipherEntry("aes192-cbc", 16, 24, "ch.ethz.ssh2.crypto.cipher.AES"));
-		ciphers.addElement(new CipherEntry("aes256-cbc", 16, 32, "ch.ethz.ssh2.crypto.cipher.AES"));
-		ciphers.addElement(new CipherEntry("blowfish-cbc", 8, 16, "ch.ethz.ssh2.crypto.cipher.BlowFish"));
+		ciphers.add(new CipherEntry("aes128-cbc", 16, 16, "ch.ethz.ssh2.crypto.cipher.AES"));
+		ciphers.add(new CipherEntry("aes192-cbc", 16, 24, "ch.ethz.ssh2.crypto.cipher.AES"));
+		ciphers.add(new CipherEntry("aes256-cbc", 16, 32, "ch.ethz.ssh2.crypto.cipher.AES"));
+		ciphers.add(new CipherEntry("blowfish-cbc", 8, 16, "ch.ethz.ssh2.crypto.cipher.BlowFish"));
 
-		ciphers.addElement(new CipherEntry("3des-ctr", 8, 24, "ch.ethz.ssh2.crypto.cipher.DESede"));
-		ciphers.addElement(new CipherEntry("3des-cbc", 8, 24, "ch.ethz.ssh2.crypto.cipher.DESede"));
+		ciphers.add(new CipherEntry("3des-ctr", 8, 24, "ch.ethz.ssh2.crypto.cipher.DESede"));
+		ciphers.add(new CipherEntry("3des-cbc", 8, 24, "ch.ethz.ssh2.crypto.cipher.DESede"));
 	}
 
 	public static String[] getDefaultCipherList()
 	{
-		String list[] = new String[ciphers.size()];
-		for (int i = 0; i < ciphers.size(); i++)
+		List<String> list = new ArrayList<String>(ciphers.size());
+		for (CipherEntry ce : ciphers)
 		{
-			CipherEntry ce = ciphers.elementAt(i);
-			list[i] = ce.type;
+			list.add(ce.type);
 		}
-		return list;
+		return list.toArray(new String[ciphers.size()]);
 	}
 
 	public static void checkCipherList(String[] cipherCandidates)
@@ -68,7 +69,7 @@ public class BlockCipherFactory
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
+	//	@SuppressWarnings("rawtypes")
 	public static BlockCipher createCipher(String type, boolean encrypt, byte[] key, byte[] iv)
 	{
 		try
@@ -89,17 +90,24 @@ public class BlockCipherFactory
 			}
 			throw new IllegalArgumentException("Cannot instantiate " + type);
 		}
-		catch (Exception e)
+		catch (ClassNotFoundException e)
 		{
-			throw new IllegalArgumentException("Cannot instantiate " + type);
+			throw new IllegalArgumentException("Cannot instantiate " + type, e);
+		}
+		catch (InstantiationException e)
+		{
+			throw new IllegalArgumentException("Cannot instantiate " + type, e);
+		}
+		catch (IllegalAccessException e)
+		{
+			throw new IllegalArgumentException("Cannot instantiate " + type, e);
 		}
 	}
 
 	private static CipherEntry getEntry(String type)
 	{
-		for (int i = 0; i < ciphers.size(); i++)
+		for (CipherEntry ce : ciphers)
 		{
-			CipherEntry ce = ciphers.elementAt(i);
 			if (ce.type.equals(type))
 			{
 				return ce;

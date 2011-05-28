@@ -7,6 +7,7 @@ package ch.ethz.ssh2.channel;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Vector;
 
 import ch.ethz.ssh2.ChannelCondition;
@@ -43,7 +44,7 @@ public class ChannelManager implements MessageHandler
 
 	private TransportManager tm;
 
-	private final Vector<Channel> channels = new Vector<Channel>();
+	private final List<Channel> channels = new Vector<Channel>();
 	private int nextLocalChannel = 100;
 	private boolean shutdown = false;
 	private int globalSuccessCounter = 0;
@@ -51,7 +52,7 @@ public class ChannelManager implements MessageHandler
 
 	private final HashMap<Integer, RemoteForwardingData> remoteForwardings = new HashMap<Integer, RemoteForwardingData>();
 
-	private final Vector<IChannelWorkerThread> listenerThreads = new Vector<IChannelWorkerThread>();
+	private final List<IChannelWorkerThread> listenerThreads = new Vector<IChannelWorkerThread>();
 
 	private boolean listenerThreadsAllowed = true;
 
@@ -243,7 +244,7 @@ public class ChannelManager implements MessageHandler
 		if (log.isEnabled())
 			log.log(50, "Closing all X11 channels for the given fake cookie");
 
-		Vector<Channel> channel_copy = new Vector<Channel>();
+		List<Channel> channel_copy = new Vector<Channel>();
 
 		synchronized (channels)
 		{
@@ -283,7 +284,7 @@ public class ChannelManager implements MessageHandler
 		if (log.isEnabled())
 			log.log(50, "Closing all channels");
 
-		Vector<Channel> channel_copy = new Vector<Channel>();
+		List<Channel> channel_copy = new Vector<Channel>();
 
 		synchronized (channels)
 		{
@@ -561,7 +562,7 @@ public class ChannelManager implements MessageHandler
 		{
 			if (listenerThreadsAllowed == false)
 				throw new IOException("Too late, this connection is closed.");
-			listenerThreads.addElement(thr);
+			listenerThreads.add(thr);
 		}
 	}
 
@@ -1575,9 +1576,8 @@ public class ChannelManager implements MessageHandler
 
 			synchronized (listenerThreads)
 			{
-				for (int i = 0; i < listenerThreads.size(); i++)
+				for (IChannelWorkerThread lat: listenerThreads)
 				{
-					IChannelWorkerThread lat = listenerThreads.elementAt(i);
 					lat.stopWorking();
 				}
 				listenerThreadsAllowed = false;
@@ -1605,7 +1605,6 @@ public class ChannelManager implements MessageHandler
 				}
 				
 				channels.clear();
-				channels.trimToSize();
 				channels.notifyAll(); /* Notify global response waiters */
 				return;
 			}
