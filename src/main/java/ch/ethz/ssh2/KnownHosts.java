@@ -14,7 +14,6 @@ import java.io.RandomAccessFile;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.SecureRandom;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Vector;
 
@@ -63,7 +62,7 @@ public class KnownHosts
 		}
 	}
 
-	private LinkedList publicKeys = new LinkedList();
+	private final LinkedList<KnownHostsEntry> publicKeys = new LinkedList<KnownHosts.KnownHostsEntry>();
 
 	public KnownHosts()
 	{
@@ -247,12 +246,8 @@ public class KnownHosts
 
 		synchronized (publicKeys)
 		{
-			Iterator i = publicKeys.iterator();
-
-			while (i.hasNext())
+			for (KnownHostsEntry ke : publicKeys)
 			{
-				KnownHostsEntry ke = (KnownHostsEntry) i.next();
-
 				if (hostnameMatches(ke.patterns, remoteHostname) == false)
 				{
 					continue;
@@ -271,24 +266,20 @@ public class KnownHosts
 		return result;
 	}
 
-	private Vector getAllKeys(String hostname)
+	private Vector<Object> getAllKeys(String hostname)
 	{
-		Vector keys = new Vector();
+		Vector<Object> keys = new Vector<Object>();
 
 		synchronized (publicKeys)
 		{
-			Iterator i = publicKeys.iterator();
-
-			while (i.hasNext())
+			for (KnownHostsEntry ke : publicKeys)
 			{
-				KnownHostsEntry ke = (KnownHostsEntry) i.next();
-
 				if (hostnameMatches(ke.patterns, hostname) == false)
 				{
 					continue;
 				}
 
-				keys.addElement(ke.key);
+				keys.add(ke.key);
 			}
 		}
 
@@ -610,17 +601,17 @@ public class KnownHosts
 	{
 		String preferredAlgo = null;
 
-		Vector keys = getAllKeys(hostname);
+		Vector<Object> keys = getAllKeys(hostname);
 
-		for (int i = 0; i < keys.size(); i++)
+		for (Object key : keys)
 		{
 			String thisAlgo = null;
 
-			if (keys.elementAt(i) instanceof RSAPublicKey)
+			if (key instanceof RSAPublicKey)
 			{
 				thisAlgo = "ssh-rsa";
 			}
-			else if (keys.elementAt(i) instanceof DSAPublicKey)
+			else if (key instanceof DSAPublicKey)
 			{
 				thisAlgo = "ssh-dss";
 			}

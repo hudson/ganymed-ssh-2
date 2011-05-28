@@ -518,9 +518,8 @@ public class TransportManager
 					}
 				}
 
-				for (int i = 0; i < messageHandlers.size(); i++)
+				for (HandlerEntry he : messageHandlers)
 				{
-					HandlerEntry he = messageHandlers.get(i);
 					try
 					{
 						he.mh.handleMessage(null, 0);

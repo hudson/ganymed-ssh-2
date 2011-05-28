@@ -2,11 +2,13 @@
  * Copyright (c) 2006-2011 Christian Plattner. All rights reserved.
  * Please refer to the LICENSE.txt for licensing details.
  */
+
 package ch.ethz.ssh2.util;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 
 import ch.ethz.ssh2.log.Logger;
@@ -20,13 +22,13 @@ import ch.ethz.ssh2.log.Logger;
  * Only after new timeouts arrive a new thread (singleton) will be instantiated.
  * 
  * @author Christian Plattner
- * @version 2.50, 03/15/10
+ * @version $Id$
  */
 public class TimeoutService
 {
 	private static final Logger log = Logger.getLogger(TimeoutService.class);
 
-	public static class TimeoutToken implements Comparable
+	public static class TimeoutToken
 	{
 		private long runTime;
 		private Runnable handler;
@@ -35,16 +37,6 @@ public class TimeoutService
 		{
 			this.runTime = runTime;
 			this.handler = handler;
-		}
-
-		public int compareTo(Object o)
-		{
-			TimeoutToken t = (TimeoutToken) o;
-			if (runTime > t.runTime)
-				return 1;
-			if (runTime == t.runTime)
-				return 0;
-			return -1;
 		}
 	}
 
@@ -104,7 +96,7 @@ public class TimeoutService
 	}
 
 	/* The list object is also used for locking purposes */
-	private static final LinkedList todolist = new LinkedList();
+	private static final LinkedList<TimeoutToken> todolist = new LinkedList<TimeoutService.TimeoutToken>();
 
 	private static Thread timeoutThread = null;
 
@@ -122,7 +114,18 @@ public class TimeoutService
 		synchronized (todolist)
 		{
 			todolist.add(token);
-			Collections.sort(todolist);
+
+			Collections.sort(todolist, new Comparator<TimeoutToken>()
+			{
+				public int compare(TimeoutToken o1, TimeoutToken o2)
+				{
+					if (o1.runTime > o2.runTime)
+						return 1;
+					if (o1.runTime == o2.runTime)
+						return 0;
+					return -1;
+				}
+			});
 
 			if (timeoutThread != null)
 				timeoutThread.interrupt();
