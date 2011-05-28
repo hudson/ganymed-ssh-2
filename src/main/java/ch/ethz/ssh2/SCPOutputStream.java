@@ -9,8 +9,6 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import ch.ethz.ssh2.SCPClient;
-import ch.ethz.ssh2.Session;
 import ch.ethz.ssh2.util.StringEncoder;
 
 /**
