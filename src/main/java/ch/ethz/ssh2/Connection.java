@@ -47,7 +47,7 @@ public class Connection
 	/**
 	 * The identifier presented to the SSH-2 server.
 	 */
-	private String identification = "Ganymed";
+	private String identification = "Ganymed-" + Version.getSpecification();
 
 	/* Will be used to generate all random data needed for the current connection.
 	 * Note: SecureRandom.nextBytes() is thread safe.
