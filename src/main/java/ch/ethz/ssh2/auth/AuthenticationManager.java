@@ -127,6 +127,11 @@ public class AuthenticationManager implements MessageHandler
 		return remainingMethods;
 	}
 
+	public String getBanner()
+	{
+		return banner;
+		
+	}
 	public boolean getPartialSuccess()
 	{
 		return isPartialSuccess;
