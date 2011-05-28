@@ -68,6 +68,7 @@ public class BlockCipherFactory
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static BlockCipher createCipher(String type, boolean encrypt, byte[] key, byte[] iv)
 	{
 		try

@@ -2,6 +2,7 @@
  * Copyright (c) 2011 David Kocher. All rights reserved.
  * Please refer to the LICENSE.txt for licensing details.
  */
+
 package ch.ethz.ssh2.channel;
 
 import java.io.IOException;
@@ -11,6 +12,11 @@ import java.io.IOException;
  */
 public class ChannelClosedException extends IOException
 {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public ChannelClosedException(String s)
 	{
