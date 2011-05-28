@@ -2,7 +2,7 @@
  * Copyright (c) 2006-2011 Christian Plattner. All rights reserved.
  * Please refer to the LICENSE.txt for licensing details.
  */
-package ch.ethz.ssh2.sftp;
+package ch.ethz.ssh2;
 
 /**
  * A <code>SFTPv3DirectoryEntry</code> as returned by {@link SFTPv3Client#ls(String)}.

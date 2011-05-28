@@ -1,12 +1,9 @@
-package ch.ethz.ssh2.scp;
+package ch.ethz.ssh2;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
-
-import ch.ethz.ssh2.Connection;
-import ch.ethz.ssh2.Session;
 
 /**
  * A very basic <code>SCPClient</code> that can be used to copy files from/to

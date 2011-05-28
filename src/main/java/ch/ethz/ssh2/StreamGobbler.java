@@ -11,26 +11,26 @@ import java.io.InputStream;
  * A <code>StreamGobbler</code> is an InputStream that uses an internal worker
  * thread to constantly consume input from another InputStream. It uses a buffer
  * to store the consumed data. The buffer size is automatically adjusted, if needed.
- * <p>
+ * <p/>
  * This class is sometimes very convenient - if you wrap a session's STDOUT and STDERR
  * InputStreams with instances of this class, then you don't have to bother about
  * the shared window of STDOUT and STDERR in the low level SSH-2 protocol,
  * since all arriving data will be immediatelly consumed by the worker threads.
  * Also, as a side effect, the streams will be buffered (e.g., single byte
  * read() operations are faster).
- * <p>
+ * <p/>
  * Other SSH for Java libraries include this functionality by default in
  * their STDOUT and STDERR InputStream implementations, however, please be aware
  * that this approach has also a downside:
- * <p>
+ * <p/>
  * If you do not call the StreamGobbler's <code>read()</code> method often enough
  * and the peer is constantly sending huge amounts of data, then you will sooner or later
  * encounter a low memory situation due to the aggregated data (well, it also depends on the Java heap size).
  * Joe Average will like this class anyway - a paranoid programmer would never use such an approach.
- * <p>
+ * <p/>
  * The term "StreamGobbler" was taken from an article called "When Runtime.exec() won't",
  * see http://www.javaworld.com/javaworld/jw-12-2000/jw-1229-traps.html.
- * 
+ *
  * @author Christian Plattner
  * @version 2.50, 03/15/10
  */
@@ -39,6 +39,7 @@ public class StreamGobbler extends InputStream
 {
 	class GobblerThread extends Thread
 	{
+		@Override
 		public void run()
 		{
 			byte[] buff = new byte[8192];
@@ -106,9 +107,8 @@ public class StreamGobbler extends InputStream
 	}
 
 	private InputStream is;
-	private GobblerThread t;
 
-	private Object synchronizer = new Object();
+	private final Object synchronizer = new Object();
 
 	private boolean isEOF = false;
 	private boolean isClosed = false;
@@ -121,7 +121,7 @@ public class StreamGobbler extends InputStream
 	public StreamGobbler(InputStream is)
 	{
 		this.is = is;
-		t = new GobblerThread();
+		GobblerThread t = new GobblerThread();
 		t.setDaemon(true);
 		t.start();
 	}
@@ -154,10 +154,7 @@ public class StreamGobbler extends InputStream
 						wasInterrupted = true;
 					}
 				}
-
-				int b = buffer[read_pos++] & 0xff;
-
-				return b;
+				return buffer[read_pos++] & 0xff;
 			}
 		}
 		finally

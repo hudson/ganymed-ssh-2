@@ -24,19 +24,19 @@ import ch.ethz.ssh2.channel.X11ServerData;
  */
 public class Session
 {
-	ChannelManager cm;
-	Channel cn;
+	private ChannelManager cm;
+	private Channel cn;
 
-	boolean flag_pty_requested = false;
-	boolean flag_x11_requested = false;
-	boolean flag_execution_started = false;
-	boolean flag_closed = false;
+	private boolean flag_pty_requested = false;
+	private boolean flag_x11_requested = false;
+	private boolean flag_execution_started = false;
+	private boolean flag_closed = false;
 
-	String x11FakeCookie = null;
+	private String x11FakeCookie = null;
 
-	final SecureRandom rnd;
+	private final SecureRandom rnd;
 
-	Session(ChannelManager cm, SecureRandom rnd) throws IOException
+	protected Session(ChannelManager cm, SecureRandom rnd) throws IOException
 	{
 		this.cm = cm;
 		this.cn = cm.openSessionChannel();

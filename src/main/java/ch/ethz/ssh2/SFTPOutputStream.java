@@ -2,7 +2,7 @@
  * Copyright (c) 2011 David Kocher. All rights reserved.
  * Please refer to the LICENSE.txt for licensing details.
  */
-package ch.ethz.ssh2.sftp;
+package ch.ethz.ssh2;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -33,7 +33,7 @@ public class SFTPOutputStream extends OutputStream
      * byte written and <code>b[off+len-1]</code> is the last byte written
      * by this operation.
      *
-     * @see ch.ethz.ssh2.sftp.SFTPv3Client#write(SFTPv3FileHandle,long,byte[],int,int)
+     * @see SFTPv3Client#write(SFTPv3FileHandle,long,byte[],int,int)
      */
     @Override
     public void write(byte[] buffer, int offset, int len) throws IOException

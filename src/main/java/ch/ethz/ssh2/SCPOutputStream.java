@@ -2,13 +2,14 @@
  * Copyright (c) 2011 David Kocher. All rights reserved.
  * Please refer to the LICENSE.txt for licensing details.
  */
-package ch.ethz.ssh2.scp;
+package ch.ethz.ssh2;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import ch.ethz.ssh2.SCPClient;
 import ch.ethz.ssh2.Session;
 import ch.ethz.ssh2.util.StringEncoder;
 

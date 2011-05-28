@@ -2,7 +2,7 @@
  * Copyright (c) 2006-2011 Christian Plattner. All rights reserved.
  * Please refer to the LICENSE.txt for licensing details.
  */
-package ch.ethz.ssh2.sftp;
+package ch.ethz.ssh2;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -15,12 +15,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import ch.ethz.ssh2.Connection;
-import ch.ethz.ssh2.Session;
 import ch.ethz.ssh2.channel.Channel;
 import ch.ethz.ssh2.log.Logger;
 import ch.ethz.ssh2.packets.TypesReader;
 import ch.ethz.ssh2.packets.TypesWriter;
+import ch.ethz.ssh2.sftp.AttribFlags;
+import ch.ethz.ssh2.sftp.ErrorCodes;
+import ch.ethz.ssh2.sftp.Packet;
 
 /**
  * A <code>SFTPv3Client</code> represents a SFTP (protocol version 3)

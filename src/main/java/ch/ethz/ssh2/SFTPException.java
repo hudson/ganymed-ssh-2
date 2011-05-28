@@ -2,7 +2,7 @@
  * Copyright (c) 2006-2011 Christian Plattner. All rights reserved.
  * Please see the LICENSE.txt for licensing details.
  */
-package ch.ethz.ssh2.sftp;
+package ch.ethz.ssh2;
 
 import java.io.IOException;
 
@@ -28,7 +28,7 @@ public class SFTPException extends IOException
 		String[] detail = ErrorCodes.getDescription(errorCode);
 
 		if (detail == null)
-			return s + " (UNKNOW SFTP ERROR CODE)";
+			return s + " (UNKNOWN SFTP ERROR CODE)";
 
 		return s + " (" + detail[0] + ": " + detail[1] + ")";
 	}
@@ -71,7 +71,7 @@ public class SFTPException extends IOException
 		String[] detail = ErrorCodes.getDescription(sftpErrorCode);
 
 		if (detail == null)
-			return "UNKNOW SFTP ERROR CODE " + sftpErrorCode;
+			return "UNKNOWN SFTP ERROR CODE " + sftpErrorCode;
 
 		return detail[0];
 	}

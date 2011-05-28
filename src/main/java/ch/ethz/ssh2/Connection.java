@@ -20,7 +20,6 @@ import ch.ethz.ssh2.crypto.CryptoWishList;
 import ch.ethz.ssh2.crypto.cipher.BlockCipherFactory;
 import ch.ethz.ssh2.crypto.digest.MAC;
 import ch.ethz.ssh2.packets.PacketIgnore;
-import ch.ethz.ssh2.scp.SCPClient;
 import ch.ethz.ssh2.transport.KexManager;
 import ch.ethz.ssh2.transport.TransportManager;
 import ch.ethz.ssh2.util.TimeoutService;
