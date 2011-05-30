@@ -2,6 +2,38 @@
 Release Notes:
 ==============
 
+build???, 2011-06-??
+
+- Requires Java 5 or later.
+
+- Provide POM for Maven 3 build.
+
+- Performance gains with request parallelism in requests for read and write write operations in SFTPv3Client.
+
+- Bugfix for infinite timeout on socket connect.
+
+- SFTPInputStream and SFTPOutputStream to read or write from a SFTPv3FileHandle compatible with standard I/O operations in Java. 
+
+- SCPClient returning SCPInputStream and SCPOutputStream for get and put operations respectively compatible with stanard I/O operations in Java.
+
+- Option to attach a packet listener to SFTPv3Client for logging purposes.
+
+- Fixed a bug in KnownHosts.getPreferredServerHostkeyAlgorithmOrder (it always returned null, which is a valid return value but wrong).
+
+- Added accessor to query session state and isConnected() in SFTPv3Client returning a boolean
+
+- Adjusted channel window size
+
+- Custom PEMDecryptException to catch PEM decoding failure.
+
+- Option to pass custom user agent string for identification string.
+
+- Continue silently when invalid key is found in known hosts file.
+
+- Add support for file append mode in SFTPv3Client.
+
+- Option to pass charset for commands executed on the remote machine.
+
 build251beta1, 2010-08-23:
 
 - Due to the slightly changed semantics of Thread.interrupt() and Object.wait() in JDK 6,
