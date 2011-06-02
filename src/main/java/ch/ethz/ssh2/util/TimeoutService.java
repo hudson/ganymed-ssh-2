@@ -89,7 +89,7 @@ public class TimeoutService
 					{
 						StringWriter sw = new StringWriter();
 						e.printStackTrace(new PrintWriter(sw));
-						log.log(20, "Exeception in Timeout handler:" + e.getMessage() + "(" + sw.toString() + ")");
+						log.warning("Exeception in Timeout handler:" + e.getMessage() + "(" + sw.toString() + ")");
 					}
 				}
 			}

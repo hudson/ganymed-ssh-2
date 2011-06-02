@@ -241,8 +241,7 @@ public class ChannelManager implements MessageHandler
 		if (killChannels == false)
 			return;
 
-		if (log.isEnabled())
-			log.log(50, "Closing all X11 channels for the given fake cookie");
+		log.debug("Closing all X11 channels for the given fake cookie");
 
 		List<Channel> channel_copy = new Vector<Channel>();
 
@@ -281,8 +280,8 @@ public class ChannelManager implements MessageHandler
 
 	public void closeAllChannels()
 	{
-		if (log.isEnabled())
-			log.log(50, "Closing all channels");
+
+		log.debug("Closing all channels");
 
 		List<Channel> channel_copy = new Vector<Channel>();
 
@@ -334,8 +333,8 @@ public class ChannelManager implements MessageHandler
 			c.closeMessageSent = true;
 		}
 
-		if (log.isEnabled())
-			log.log(50, "Sent SSH_MSG_CHANNEL_CLOSE (channel " + c.localID + ")");
+
+		log.debug("Sent SSH_MSG_CHANNEL_CLOSE (channel " + c.localID + ")");
 	}
 
 	public void sendEOF(Channel c) throws IOException
@@ -361,8 +360,8 @@ public class ChannelManager implements MessageHandler
 			tm.sendMessage(msg);
 		}
 
-		if (log.isEnabled())
-			log.log(50, "Sent EOF (Channel " + c.localID + "/" + c.remoteID + ")");
+
+		log.debug("Sent EOF (Channel " + c.localID + "/" + c.remoteID + ")");
 	}
 
 	public void sendOpenConfirmation(Channel c) throws IOException
@@ -503,8 +502,8 @@ public class ChannelManager implements MessageHandler
 		PacketGlobalForwardRequest pgf = new PacketGlobalForwardRequest(true, bindAddress, bindPort);
 		tm.sendMessage(pgf.getPayload());
 
-		if (log.isEnabled())
-			log.log(50, "Requesting a remote forwarding ('" + bindAddress + "', " + bindPort + ")");
+
+		log.debug("Requesting a remote forwarding ('" + bindAddress + "', " + bindPort + ")");
 
 		try
 		{
@@ -543,8 +542,8 @@ public class ChannelManager implements MessageHandler
 				rfd.bindPort);
 		tm.sendMessage(pgcf.getPayload());
 
-		if (log.isEnabled())
-			log.log(50, "Requesting cancelation of remote forward ('" + rfd.bindAddress + "', " + rfd.bindPort + ")");
+
+		log.debug("Requesting cancelation of remote forward ('" + rfd.bindAddress + "', " + rfd.bindPort + ")");
 
 		waitForGlobalSuccessOrFailure();
 
@@ -567,7 +566,7 @@ public class ChannelManager implements MessageHandler
 	}
 
 	public Channel openDirectTCPIPChannel(String host_to_connect, int port_to_connect, String originator_IP_address,
-			int originator_port) throws IOException
+										  int originator_port) throws IOException
 	{
 		Channel c = new Channel(this);
 
@@ -597,8 +596,8 @@ public class ChannelManager implements MessageHandler
 			// end of synchronized block forces the writing out to main memory
 		}
 
-		if (log.isEnabled())
-			log.log(50, "Sending SSH_MSG_CHANNEL_OPEN (Channel " + c.localID + ")");
+
+		log.debug("Sending SSH_MSG_CHANNEL_OPEN (Channel " + c.localID + ")");
 
 		PacketOpenSessionChannel smo = new PacketOpenSessionChannel(c.localID, c.localWindow, c.localMaxPacketSize);
 		tm.sendMessage(smo.getPayload());
@@ -609,7 +608,7 @@ public class ChannelManager implements MessageHandler
 	}
 
 	public void requestPTY(Channel c, String term, int term_width_characters, int term_height_characters,
-			int term_width_pixels, int term_height_pixels, byte[] terminal_modes) throws IOException
+						   int term_width_pixels, int term_height_pixels, byte[] terminal_modes) throws IOException
 	{
 		PacketSessionPtyRequest spr;
 
@@ -642,7 +641,7 @@ public class ChannelManager implements MessageHandler
 	}
 
 	public void requestX11(Channel c, boolean singleConnection, String x11AuthenticationProtocol,
-			String x11AuthenticationCookie, int x11ScreenNumber) throws IOException
+						   String x11AuthenticationCookie, int x11ScreenNumber) throws IOException
 	{
 		PacketSessionX11Request psr;
 
@@ -664,8 +663,8 @@ public class ChannelManager implements MessageHandler
 			tm.sendMessage(psr.getPayload());
 		}
 
-		if (log.isEnabled())
-			log.log(50, "Requesting X11 forwarding (Channel " + c.localID + "/" + c.remoteID + ")");
+
+		log.debug("Requesting X11 forwarding (Channel " + c.localID + "/" + c.remoteID + ")");
 
 		try
 		{
@@ -737,8 +736,8 @@ public class ChannelManager implements MessageHandler
 			tm.sendMessage(sm.getPayload(charsetName));
 		}
 
-		if (log.isEnabled())
-			log.log(50, "Executing command (channel " + c.localID + ", '" + cmd + "')");
+
+		log.debug("Executing command (channel " + c.localID + ", '" + cmd + "')");
 
 		try
 		{
@@ -802,8 +801,8 @@ public class ChannelManager implements MessageHandler
 			throw new IOException("SSH_MSG_CHANNEL_EXTENDED_DATA message has wrong len (calculated " + (msglen - 13)
 					+ ", got " + len + ")");
 
-		if (log.isEnabled())
-			log.log(80, "Got SSH_MSG_CHANNEL_EXTENDED_DATA (channel " + id + ", " + len + ")");
+
+		log.debug("Got SSH_MSG_CHANNEL_EXTENDED_DATA (channel " + id + ", " + len + ")");
 
 		synchronized (c)
 		{
@@ -1027,8 +1026,8 @@ public class ChannelManager implements MessageHandler
 
 			if (increment > 0)
 			{
-				if (log.isEnabled())
-					log.log(80, "Sending SSH_MSG_CHANNEL_WINDOW_ADJUST (channel " + localID + ", " + increment + ")");
+
+				log.debug("Sending SSH_MSG_CHANNEL_WINDOW_ADJUST (channel " + localID + ", " + increment + ")");
 
 				synchronized (c.channelSendLock)
 				{
@@ -1076,8 +1075,8 @@ public class ChannelManager implements MessageHandler
 			throw new IOException("SSH_MSG_CHANNEL_DATA message has wrong len (calculated " + (msglen - 9) + ", got "
 					+ len + ")");
 
-		if (log.isEnabled())
-			log.log(80, "Got SSH_MSG_CHANNEL_DATA (channel " + id + ", " + len + ")");
+
+		log.debug("Got SSH_MSG_CHANNEL_DATA (channel " + id + ", " + len + ")");
 
 		synchronized (c)
 		{
@@ -1126,8 +1125,8 @@ public class ChannelManager implements MessageHandler
 			c.notifyAll();
 		}
 
-		if (log.isEnabled())
-			log.log(80, "Got SSH_MSG_CHANNEL_WINDOW_ADJUST (channel " + id + ", " + windowChange + ")");
+
+		log.debug("Got SSH_MSG_CHANNEL_WINDOW_ADJUST (channel " + id + ", " + windowChange + ")");
 	}
 
 	public void msgChannelOpen(byte[] msg, int msglen) throws IOException
@@ -1153,8 +1152,8 @@ public class ChannelManager implements MessageHandler
 
 					tm.sendAsynchronousMessage(pcof.getPayload());
 
-					if (log.isEnabled())
-						log.log(20, "Unexpected X11 request, denying it!");
+
+					log.warning("Unexpected X11 request, denying it!");
 
 					return;
 				}
@@ -1208,8 +1207,8 @@ public class ChannelManager implements MessageHandler
 
 				tm.sendAsynchronousMessage(pcof.getPayload());
 
-				if (log.isEnabled())
-					log.log(20, "Unexpected forwarded-tcpip request, denying it!");
+
+				log.debug("Unexpected forwarded-tcpip request, denying it!");
 
 				return;
 			}
@@ -1244,8 +1243,8 @@ public class ChannelManager implements MessageHandler
 
 		tm.sendAsynchronousMessage(pcof.getPayload());
 
-		if (log.isEnabled())
-			log.log(20, "The peer tried to open an unsupported channel type (" + channelType + ")");
+
+		log.warning("The peer tried to open an unsupported channel type (" + channelType + ")");
 	}
 
 	public void msgChannelRequest(byte[] msg, int msglen) throws IOException
@@ -1263,8 +1262,8 @@ public class ChannelManager implements MessageHandler
 		String type = tr.readString("US-ASCII");
 		boolean wantReply = tr.readBoolean();
 
-		if (log.isEnabled())
-			log.log(80, "Got SSH_MSG_CHANNEL_REQUEST (channel " + id + ", '" + type + "')");
+
+		log.debug("Got SSH_MSG_CHANNEL_REQUEST (channel " + id + ", '" + type + "')");
 
 		if (type.equals("exit-status"))
 		{
@@ -1282,8 +1281,8 @@ public class ChannelManager implements MessageHandler
 				c.notifyAll();
 			}
 
-			if (log.isEnabled())
-				log.log(50, "Got EXIT STATUS (channel " + id + ", status " + exit_status + ")");
+
+			log.debug("Got EXIT STATUS (channel " + id + ", status " + exit_status + ")");
 
 			return;
 		}
@@ -1307,8 +1306,8 @@ public class ChannelManager implements MessageHandler
 				c.notifyAll();
 			}
 
-			if (log.isEnabled())
-				log.log(50, "Got EXIT SIGNAL (channel " + id + ", signal " + signame + ")");
+
+			log.debug("Got EXIT SIGNAL (channel " + id + ", signal " + signame + ")");
 
 			return;
 		}
@@ -1330,8 +1329,8 @@ public class ChannelManager implements MessageHandler
 			tm.sendAsynchronousMessage(reply);
 		}
 
-		if (log.isEnabled())
-			log.log(50, "Channel request '" + type + "' is not known, ignoring it");
+
+		log.debug("Channel request '" + type + "' is not known, ignoring it");
 	}
 
 	public void msgChannelEOF(byte[] msg, int msglen) throws IOException
@@ -1352,8 +1351,8 @@ public class ChannelManager implements MessageHandler
 			c.notifyAll();
 		}
 
-		if (log.isEnabled())
-			log.log(50, "Got SSH_MSG_CHANNEL_EOF (channel " + id + ")");
+
+		log.debug("Got SSH_MSG_CHANNEL_EOF (channel " + id + ")");
 	}
 
 	public void msgChannelClose(byte[] msg, int msglen) throws IOException
@@ -1380,8 +1379,8 @@ public class ChannelManager implements MessageHandler
 			c.notifyAll();
 		}
 
-		if (log.isEnabled())
-			log.log(50, "Got SSH_MSG_CHANNEL_CLOSE (channel " + id + ")");
+
+		log.debug("Got SSH_MSG_CHANNEL_CLOSE (channel " + id + ")");
 	}
 
 	public void msgChannelSuccess(byte[] msg, int msglen) throws IOException
@@ -1402,8 +1401,8 @@ public class ChannelManager implements MessageHandler
 			c.notifyAll();
 		}
 
-		if (log.isEnabled())
-			log.log(80, "Got SSH_MSG_CHANNEL_SUCCESS (channel " + id + ")");
+
+		log.debug("Got SSH_MSG_CHANNEL_SUCCESS (channel " + id + ")");
 	}
 
 	public void msgChannelFailure(byte[] msg, int msglen) throws IOException
@@ -1424,8 +1423,8 @@ public class ChannelManager implements MessageHandler
 			c.notifyAll();
 		}
 
-		if (log.isEnabled())
-			log.log(50, "Got SSH_MSG_CHANNEL_FAILURE (channel " + id + ")");
+
+		log.debug("Got SSH_MSG_CHANNEL_FAILURE (channel " + id + ")");
 	}
 
 	public void msgChannelOpenConfirmation(byte[] msg, int msglen) throws IOException
@@ -1451,9 +1450,9 @@ public class ChannelManager implements MessageHandler
 			c.notifyAll();
 		}
 
-		if (log.isEnabled())
-			log.log(50, "Got SSH_MSG_CHANNEL_OPEN_CONFIRMATION (channel " + sm.recipientChannelID + " / remote: "
-					+ sm.senderChannelID + ")");
+
+		log.debug("Got SSH_MSG_CHANNEL_OPEN_CONFIRMATION (channel " + sm.recipientChannelID + " / remote: "
+				+ sm.senderChannelID + ")");
 	}
 
 	public void msgChannelOpenFailure(byte[] msg, int msglen) throws IOException
@@ -1478,20 +1477,20 @@ public class ChannelManager implements MessageHandler
 
 		switch (reasonCode)
 		{
-		case 1:
-			reasonCodeSymbolicName = "SSH_OPEN_ADMINISTRATIVELY_PROHIBITED";
-			break;
-		case 2:
-			reasonCodeSymbolicName = "SSH_OPEN_CONNECT_FAILED";
-			break;
-		case 3:
-			reasonCodeSymbolicName = "SSH_OPEN_UNKNOWN_CHANNEL_TYPE";
-			break;
-		case 4:
-			reasonCodeSymbolicName = "SSH_OPEN_RESOURCE_SHORTAGE";
-			break;
-		default:
-			reasonCodeSymbolicName = "UNKNOWN REASON CODE (" + reasonCode + ")";
+			case 1:
+				reasonCodeSymbolicName = "SSH_OPEN_ADMINISTRATIVELY_PROHIBITED";
+				break;
+			case 2:
+				reasonCodeSymbolicName = "SSH_OPEN_CONNECT_FAILED";
+				break;
+			case 3:
+				reasonCodeSymbolicName = "SSH_OPEN_UNKNOWN_CHANNEL_TYPE";
+				break;
+			case 4:
+				reasonCodeSymbolicName = "SSH_OPEN_RESOURCE_SHORTAGE";
+				break;
+			default:
+				reasonCodeSymbolicName = "UNKNOWN REASON CODE (" + reasonCode + ")";
 		}
 
 		StringBuilder descriptionBuffer = new StringBuilder();
@@ -1515,8 +1514,8 @@ public class ChannelManager implements MessageHandler
 			c.notifyAll();
 		}
 
-		if (log.isEnabled())
-			log.log(50, "Got SSH_MSG_CHANNEL_OPEN_FAILURE (channel " + id + ")");
+
+		log.debug("Got SSH_MSG_CHANNEL_OPEN_FAILURE (channel " + id + ")");
 	}
 
 	public void msgGlobalRequest(byte[] msg, int msglen) throws IOException
@@ -1539,8 +1538,8 @@ public class ChannelManager implements MessageHandler
 
 		/* We do not clean up the requestName String - that is OK for debug */
 
-		if (log.isEnabled())
-			log.log(80, "Got SSH_MSG_GLOBAL_REQUEST (" + requestName + ")");
+
+		log.debug("Got SSH_MSG_GLOBAL_REQUEST (" + requestName + ")");
 	}
 
 	public void msgGlobalSuccess() throws IOException
@@ -1551,8 +1550,8 @@ public class ChannelManager implements MessageHandler
 			channels.notifyAll();
 		}
 
-		if (log.isEnabled())
-			log.log(80, "Got SSH_MSG_REQUEST_SUCCESS");
+
+		log.debug("Got SSH_MSG_REQUEST_SUCCESS");
 	}
 
 	public void msgGlobalFailure() throws IOException
@@ -1563,20 +1562,20 @@ public class ChannelManager implements MessageHandler
 			channels.notifyAll();
 		}
 
-		if (log.isEnabled())
-			log.log(80, "Got SSH_MSG_REQUEST_FAILURE");
+
+		log.debug("Got SSH_MSG_REQUEST_FAILURE");
 	}
 
 	public void handleMessage(byte[] msg, int msglen) throws IOException
 	{
 		if (msg == null)
 		{
-			if (log.isEnabled())
-				log.log(50, "HandleMessage: got shutdown");
+
+			log.debug("HandleMessage: got shutdown");
 
 			synchronized (listenerThreads)
 			{
-				for (IChannelWorkerThread lat: listenerThreads)
+				for (IChannelWorkerThread lat : listenerThreads)
 				{
 					lat.stopWorking();
 				}
@@ -1603,7 +1602,7 @@ public class ChannelManager implements MessageHandler
 						c.notifyAll();
 					}
 				}
-				
+
 				channels.clear();
 				channels.notifyAll(); /* Notify global response waiters */
 				return;
@@ -1612,50 +1611,50 @@ public class ChannelManager implements MessageHandler
 
 		switch (msg[0])
 		{
-		case Packets.SSH_MSG_CHANNEL_OPEN_CONFIRMATION:
-			msgChannelOpenConfirmation(msg, msglen);
-			break;
-		case Packets.SSH_MSG_CHANNEL_WINDOW_ADJUST:
-			msgChannelWindowAdjust(msg, msglen);
-			break;
-		case Packets.SSH_MSG_CHANNEL_DATA:
-			msgChannelData(msg, msglen);
-			break;
-		case Packets.SSH_MSG_CHANNEL_EXTENDED_DATA:
-			msgChannelExtendedData(msg, msglen);
-			break;
-		case Packets.SSH_MSG_CHANNEL_REQUEST:
-			msgChannelRequest(msg, msglen);
-			break;
-		case Packets.SSH_MSG_CHANNEL_EOF:
-			msgChannelEOF(msg, msglen);
-			break;
-		case Packets.SSH_MSG_CHANNEL_OPEN:
-			msgChannelOpen(msg, msglen);
-			break;
-		case Packets.SSH_MSG_CHANNEL_CLOSE:
-			msgChannelClose(msg, msglen);
-			break;
-		case Packets.SSH_MSG_CHANNEL_SUCCESS:
-			msgChannelSuccess(msg, msglen);
-			break;
-		case Packets.SSH_MSG_CHANNEL_FAILURE:
-			msgChannelFailure(msg, msglen);
-			break;
-		case Packets.SSH_MSG_CHANNEL_OPEN_FAILURE:
-			msgChannelOpenFailure(msg, msglen);
-			break;
-		case Packets.SSH_MSG_GLOBAL_REQUEST:
-			msgGlobalRequest(msg, msglen);
-			break;
-		case Packets.SSH_MSG_REQUEST_SUCCESS:
-			msgGlobalSuccess();
-			break;
-		case Packets.SSH_MSG_REQUEST_FAILURE:
-			msgGlobalFailure();
-			break;
-		default:
-			throw new IOException("Cannot handle unknown channel message " + (msg[0] & 0xff));
+			case Packets.SSH_MSG_CHANNEL_OPEN_CONFIRMATION:
+				msgChannelOpenConfirmation(msg, msglen);
+				break;
+			case Packets.SSH_MSG_CHANNEL_WINDOW_ADJUST:
+				msgChannelWindowAdjust(msg, msglen);
+				break;
+			case Packets.SSH_MSG_CHANNEL_DATA:
+				msgChannelData(msg, msglen);
+				break;
+			case Packets.SSH_MSG_CHANNEL_EXTENDED_DATA:
+				msgChannelExtendedData(msg, msglen);
+				break;
+			case Packets.SSH_MSG_CHANNEL_REQUEST:
+				msgChannelRequest(msg, msglen);
+				break;
+			case Packets.SSH_MSG_CHANNEL_EOF:
+				msgChannelEOF(msg, msglen);
+				break;
+			case Packets.SSH_MSG_CHANNEL_OPEN:
+				msgChannelOpen(msg, msglen);
+				break;
+			case Packets.SSH_MSG_CHANNEL_CLOSE:
+				msgChannelClose(msg, msglen);
+				break;
+			case Packets.SSH_MSG_CHANNEL_SUCCESS:
+				msgChannelSuccess(msg, msglen);
+				break;
+			case Packets.SSH_MSG_CHANNEL_FAILURE:
+				msgChannelFailure(msg, msglen);
+				break;
+			case Packets.SSH_MSG_CHANNEL_OPEN_FAILURE:
+				msgChannelOpenFailure(msg, msglen);
+				break;
+			case Packets.SSH_MSG_GLOBAL_REQUEST:
+				msgGlobalRequest(msg, msglen);
+				break;
+			case Packets.SSH_MSG_REQUEST_SUCCESS:
+				msgGlobalSuccess();
+				break;
+			case Packets.SSH_MSG_REQUEST_FAILURE:
+				msgGlobalFailure();
+				break;
+			default:
+				throw new IOException("Cannot handle unknown channel message " + (msg[0] & 0xff));
 		}
 	}
 }

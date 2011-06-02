@@ -11,9 +11,9 @@ import ch.ethz.ssh2.log.Logger;
 
 /**
  * RemoteAcceptThread.
- * 
+ *
  * @author Christian Plattner
- * @version 2.50, 03/15/10
+ * @version $Id$
  */
 public class RemoteAcceptThread extends Thread
 {
@@ -31,7 +31,7 @@ public class RemoteAcceptThread extends Thread
 	Socket s;
 
 	public RemoteAcceptThread(Channel c, String remoteConnectedAddress, int remoteConnectedPort,
-			String remoteOriginatorAddress, int remoteOriginatorPort, String targetAddress, int targetPort)
+							  String remoteOriginatorAddress, int remoteOriginatorPort, String targetAddress, int targetPort)
 	{
 		this.c = c;
 		this.remoteConnectedAddress = remoteConnectedAddress;
@@ -41,9 +41,8 @@ public class RemoteAcceptThread extends Thread
 		this.targetAddress = targetAddress;
 		this.targetPort = targetPort;
 
-		if (log.isEnabled())
-			log.log(20, "RemoteAcceptThread: " + remoteConnectedAddress + "/" + remoteConnectedPort + ", R: "
-					+ remoteOriginatorAddress + "/" + remoteOriginatorPort);
+		log.debug("RemoteAcceptThread: " + remoteConnectedAddress + "/" + remoteConnectedPort + ", R: "
+				+ remoteOriginatorAddress + "/" + remoteOriginatorPort);
 	}
 
 	@Override
@@ -84,7 +83,7 @@ public class RemoteAcceptThread extends Thread
 		}
 		catch (IOException e)
 		{
-			log.log(50, "IOException in proxy code: " + e.getMessage());
+			log.warning("IOException in proxy code: " + e.getMessage());
 
 			try
 			{

@@ -14,9 +14,9 @@ import ch.ethz.ssh2.util.StringEncoder;
 
 /**
  * RemoteX11AcceptThread.
- * 
+ *
  * @author Christian Plattner
- * @version 2.50, 03/15/10
+ * @version $Id$
  */
 public class RemoteX11AcceptThread extends Thread
 {
@@ -93,7 +93,7 @@ public class RemoteX11AcceptThread extends Thread
 				throw new IOException("Unknown endian format in X11 message!");
 
 			/* Yes, I came up with this myself - shall I file an application for a patent? =) */
-			
+
 			int idxMSB = (header[0] == 0x42) ? 0 : 1;
 
 			/* Read authorization data header */
@@ -224,7 +224,7 @@ public class RemoteX11AcceptThread extends Thread
 		}
 		catch (IOException e)
 		{
-			log.log(50, "IOException in X11 proxy code: " + e.getMessage());
+			log.warning("IOException in X11 proxy code: " + e.getMessage());
 
 			try
 			{

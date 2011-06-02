@@ -39,7 +39,7 @@ import ch.ethz.ssh2.signature.RSASignature;
  * KexManager.
  * 
  * @author Christian Plattner
- * @version 2.50, 03/15/10
+ * @version $Id$
  */
 public class KexManager
 {
@@ -181,36 +181,36 @@ public class KexManager
 		{
 			np.kex_algo = getFirstMatch(client.kex_algorithms, server.kex_algorithms);
 
-			log.log(20, "kex_algo=" + np.kex_algo);
+			log.warning("kex_algo=" + np.kex_algo);
 
 			np.server_host_key_algo = getFirstMatch(client.server_host_key_algorithms,
 					server.server_host_key_algorithms);
 
-			log.log(20, "server_host_key_algo=" + np.server_host_key_algo);
+			log.warning("server_host_key_algo=" + np.server_host_key_algo);
 
 			np.enc_algo_client_to_server = getFirstMatch(client.encryption_algorithms_client_to_server,
 					server.encryption_algorithms_client_to_server);
 			np.enc_algo_server_to_client = getFirstMatch(client.encryption_algorithms_server_to_client,
 					server.encryption_algorithms_server_to_client);
 
-			log.log(20, "enc_algo_client_to_server=" + np.enc_algo_client_to_server);
-			log.log(20, "enc_algo_server_to_client=" + np.enc_algo_server_to_client);
+			log.warning("enc_algo_client_to_server=" + np.enc_algo_client_to_server);
+			log.warning("enc_algo_server_to_client=" + np.enc_algo_server_to_client);
 
 			np.mac_algo_client_to_server = getFirstMatch(client.mac_algorithms_client_to_server,
 					server.mac_algorithms_client_to_server);
 			np.mac_algo_server_to_client = getFirstMatch(client.mac_algorithms_server_to_client,
 					server.mac_algorithms_server_to_client);
 
-			log.log(20, "mac_algo_client_to_server=" + np.mac_algo_client_to_server);
-			log.log(20, "mac_algo_server_to_client=" + np.mac_algo_server_to_client);
+			log.warning("mac_algo_client_to_server=" + np.mac_algo_client_to_server);
+			log.warning("mac_algo_server_to_client=" + np.mac_algo_server_to_client);
 
 			np.comp_algo_client_to_server = getFirstMatch(client.compression_algorithms_client_to_server,
 					server.compression_algorithms_client_to_server);
 			np.comp_algo_server_to_client = getFirstMatch(client.compression_algorithms_server_to_client,
 					server.compression_algorithms_server_to_client);
 
-			log.log(20, "comp_algo_client_to_server=" + np.comp_algo_client_to_server);
-			log.log(20, "comp_algo_server_to_client=" + np.comp_algo_server_to_client);
+			log.warning("comp_algo_client_to_server=" + np.comp_algo_client_to_server);
+			log.warning("comp_algo_server_to_client=" + np.comp_algo_server_to_client);
 
 		}
 		catch (NegotiateException e)
@@ -358,7 +358,7 @@ public class KexManager
 			RSASignature rs = RSASHA1Verify.decodeSSHRSASignature(sig);
 			RSAPublicKey rpk = RSASHA1Verify.decodeSSHRSAPublicKey(hostkey);
 
-			log.log(50, "Verifying ssh-rsa signature");
+			log.debug("Verifying ssh-rsa signature");
 
 			return RSASHA1Verify.verifySignature(kxs.H, rs, rpk);
 		}
@@ -368,7 +368,7 @@ public class KexManager
 			DSASignature ds = DSASHA1Verify.decodeSSHDSASignature(sig);
 			DSAPublicKey dpk = DSASHA1Verify.decodeSSHDSAPublicKey(hostkey);
 
-			log.log(50, "Verifying ssh-dss signature");
+			log.debug("Verifying ssh-dss signature");
 
 			return DSASHA1Verify.verifySignature(kxs.H, ds, dpk);
 		}

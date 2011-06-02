@@ -99,7 +99,7 @@ public class SFTPv3Client
 
 		this.listener = listener;
 
-		log.log("Opening session and starting SFTP subsystem.");
+		log.debug("Opening session and starting SFTP subsystem.");
 		sess = conn.openSession();
 		sess.startSubSystem("sftp");
 
@@ -126,12 +126,12 @@ public class SFTPv3Client
 		{
 			public void read(String packet)
 			{
-				log.log("Read packet " + packet);
+				log.debug("Read packet " + packet);
 			}
 
 			public void write(String packet)
 			{
-				log.log("Write packet " + packet);
+				log.debug("Write packet " + packet);
 			}
 		});
 	}
@@ -323,26 +323,26 @@ public class SFTPv3Client
 
 		if ((flags & AttribFlags.SSH_FILEXFER_ATTR_SIZE) != 0)
 		{
-			log.log("SSH_FILEXFER_ATTR_SIZE");
+			log.debug("SSH_FILEXFER_ATTR_SIZE");
 			fa.size = tr.readUINT64();
 		}
 
 		if ((flags & AttribFlags.SSH_FILEXFER_ATTR_V3_UIDGID) != 0)
 		{
-			log.log("SSH_FILEXFER_ATTR_V3_UIDGID");
+			log.debug("SSH_FILEXFER_ATTR_V3_UIDGID");
 			fa.uid = tr.readUINT32();
 			fa.gid = tr.readUINT32();
 		}
 
 		if ((flags & AttribFlags.SSH_FILEXFER_ATTR_PERMISSIONS) != 0)
 		{
-			log.log("SSH_FILEXFER_ATTR_PERMISSIONS");
+			log.debug("SSH_FILEXFER_ATTR_PERMISSIONS");
 			fa.permissions = tr.readUINT32();
 		}
 
 		if ((flags & AttribFlags.SSH_FILEXFER_ATTR_V3_ACMODTIME) != 0)
 		{
-			log.log("SSH_FILEXFER_ATTR_V3_ACMODTIME");
+			log.debug("SSH_FILEXFER_ATTR_V3_ACMODTIME");
 			fa.atime = tr.readUINT32();
 			fa.mtime = tr.readUINT32();
 
@@ -352,7 +352,7 @@ public class SFTPv3Client
 		{
 			int count = tr.readUINT32();
 
-			log.log("SSH_FILEXFER_ATTR_EXTENDED (" + count + ")");
+			log.debug("SSH_FILEXFER_ATTR_EXTENDED (" + count + ")");
 			/* Read it anyway to detect corrupt packets */
 
 			while (count > 0)
@@ -382,7 +382,7 @@ public class SFTPv3Client
 		TypesWriter tw = new TypesWriter();
 		tw.writeString(handle.fileHandle, 0, handle.fileHandle.length);
 
-		log.log("Sending SSH_FXP_FSTAT...");
+		log.debug("Sending SSH_FXP_FSTAT...");
 		sendMessage(Packet.SSH_FXP_FSTAT, req_id, tw.getBytes());
 
 		byte[] resp = receiveMessage(34000);
@@ -421,7 +421,7 @@ public class SFTPv3Client
 		TypesWriter tw = new TypesWriter();
 		tw.writeString(path, charsetName);
 
-		log.log("Sending SSH_FXP_STAT/SSH_FXP_LSTAT...");
+		log.debug("Sending SSH_FXP_STAT/SSH_FXP_LSTAT...");
 		sendMessage(statMethod, req_id, tw.getBytes());
 
 		byte[] resp = receiveMessage(34000);
@@ -497,7 +497,7 @@ public class SFTPv3Client
 		TypesWriter tw = new TypesWriter();
 		tw.writeString(path, charsetName);
 
-		log.log("Sending SSH_FXP_READLINK...");
+		log.debug("Sending SSH_FXP_READLINK...");
 		sendMessage(Packet.SSH_FXP_READLINK, req_id, tw.getBytes());
 
 		byte[] resp = receiveMessage(34000);
@@ -584,7 +584,7 @@ public class SFTPv3Client
 		tw.writeString(path, charsetName);
 		tw.writeBytes(createAttrs(attr));
 
-		log.log("Sending SSH_FXP_SETSTAT...");
+		log.debug("Sending SSH_FXP_SETSTAT...");
 		sendMessage(Packet.SSH_FXP_SETSTAT, req_id, tw.getBytes());
 
 		expectStatusOKMessage(req_id);
@@ -609,7 +609,7 @@ public class SFTPv3Client
 		tw.writeString(handle.fileHandle, 0, handle.fileHandle.length);
 		tw.writeBytes(createAttrs(attr));
 
-		log.log("Sending SSH_FXP_FSETSTAT...");
+		log.debug("Sending SSH_FXP_FSETSTAT...");
 		sendMessage(Packet.SSH_FXP_FSETSTAT, req_id, tw.getBytes());
 
 		expectStatusOKMessage(req_id);
@@ -635,7 +635,7 @@ public class SFTPv3Client
 		tw.writeString(target, charsetName);
 		tw.writeString(src, charsetName);
 
-		log.log("Sending SSH_FXP_SYMLINK...");
+		log.debug("Sending SSH_FXP_SYMLINK...");
 		sendMessage(Packet.SSH_FXP_SYMLINK, req_id, tw.getBytes());
 
 		expectStatusOKMessage(req_id);
@@ -657,7 +657,7 @@ public class SFTPv3Client
 		TypesWriter tw = new TypesWriter();
 		tw.writeString(path, charsetName);
 
-		log.log("Sending SSH_FXP_REALPATH...");
+		log.debug("Sending SSH_FXP_REALPATH...");
 		sendMessage(Packet.SSH_FXP_REALPATH, req_id, tw.getBytes());
 
 		byte[] resp = receiveMessage(34000);
@@ -709,7 +709,7 @@ public class SFTPv3Client
 			TypesWriter tw = new TypesWriter();
 			tw.writeString(handle, 0, handle.length);
 
-			log.log("Sending SSH_FXP_READDIR...");
+			log.debug("Sending SSH_FXP_READDIR...");
 			sendMessage(Packet.SSH_FXP_READDIR, req_id, tw.getBytes());
 
 			byte[] resp = receiveMessage(34000);
@@ -729,7 +729,7 @@ public class SFTPv3Client
 			{
 				int count = tr.readUINT32();
 
-				log.log("Parsing " + count + " name entries...");
+				log.debug("Parsing " + count + " name entries...");
 				while (count > 0)
 				{
 					SFTPv3DirectoryEntry dirEnt = new SFTPv3DirectoryEntry();
@@ -741,7 +741,7 @@ public class SFTPv3Client
 					dirEnt.attributes = readAttrs(tr);
 					files.add(dirEnt);
 
-					log.log("File: '" + dirEnt.filename + "'");
+					log.debug("File: '" + dirEnt.filename + "'");
 					count--;
 				}
 				continue;
@@ -771,7 +771,7 @@ public class SFTPv3Client
 		TypesWriter tw = new TypesWriter();
 		tw.writeString(path, charsetName);
 
-		log.log("Sending SSH_FXP_OPENDIR...");
+		log.debug("Sending SSH_FXP_OPENDIR...");
 		sendMessage(Packet.SSH_FXP_OPENDIR, req_id, tw.getBytes());
 
 		byte[] resp = receiveMessage(34000);
@@ -789,7 +789,7 @@ public class SFTPv3Client
 
 		if (t == Packet.SSH_FXP_HANDLE)
 		{
-			log.log("Got SSH_FXP_HANDLE.");
+			log.debug("Got SSH_FXP_HANDLE.");
 			return new SFTPv3FileHandle(this, tr.readByteString());
 		}
 
@@ -831,14 +831,14 @@ public class SFTPv3Client
 
 		final int client_version = 3;
 
-		log.log("Sending SSH_FXP_INIT (" + client_version + ")...");
+		log.debug("Sending SSH_FXP_INIT (" + client_version + ")...");
 		TypesWriter tw = new TypesWriter();
 		tw.writeUINT32(client_version);
 		sendMessage(Packet.SSH_FXP_INIT, 0, tw.getBytes());
 
 		/* Receive SSH_FXP_VERSION */
 
-		log.log("Waiting for SSH_FXP_VERSION...");
+		log.debug("Waiting for SSH_FXP_VERSION...");
 		TypesReader tr = new TypesReader(receiveMessage(34000)); /* Should be enough for any reasonable server */
 
 		int t = tr.readByte();
@@ -851,7 +851,7 @@ public class SFTPv3Client
 
 		protocol_version = tr.readUINT32();
 
-		log.log("SSH_FXP_VERSION: protocol_version = " + protocol_version);
+		log.debug("SSH_FXP_VERSION: protocol_version = " + protocol_version);
 		if (protocol_version != 3)
 		{
 			throw new IOException("Server version " + protocol_version + " is currently not supported");
@@ -864,7 +864,7 @@ public class SFTPv3Client
 			String name = tr.readString();
 			listener.read(name);
 			byte[] value = tr.readByteString();
-			log.log("SSH_FXP_VERSION: extension: " + name + " = '" + expandString(value, 0, value.length) + "'");
+			log.debug("SSH_FXP_VERSION: extension: " + name + " = '" + expandString(value, 0, value.length) + "'");
 		}
 	}
 
@@ -1217,7 +1217,7 @@ public class SFTPv3Client
 		tw.writeUINT32(flags);
 		tw.writeBytes(createAttrs(attr));
 
-		log.log("Sending SSH_FXP_OPEN...");
+		log.debug("Sending SSH_FXP_OPEN...");
 		sendMessage(Packet.SSH_FXP_OPEN, req_id, tw.getBytes());
 
 		byte[] resp = receiveMessage(34000);
@@ -1235,7 +1235,7 @@ public class SFTPv3Client
 
 		if (t == Packet.SSH_FXP_HANDLE)
 		{
-			log.log("Got SSH_FXP_HANDLE.");
+			log.debug("Got SSH_FXP_HANDLE.");
 			return new SFTPv3FileHandle(this, tr.readByteString());
 		}
 
@@ -1282,7 +1282,7 @@ public class SFTPv3Client
 		tw.writeUINT64(offset);
 		tw.writeUINT32(len);
 
-		log.log("Sending SSH_FXP_READ (" + id + ") " + offset + "/" + len);
+		log.debug("Sending SSH_FXP_READ (" + id + ") " + offset + "/" + len);
 		sendMessage(Packet.SSH_FXP_READ, id, tw.getBytes());
 	}
 
@@ -1302,7 +1302,6 @@ public class SFTPv3Client
 	public void setRequestParallelism(int parallelism)
 	{
 		this.parallelism = Math.min(parallelism, DEFAULT_MAX_PARALLELISM);
-		log.log("setDownloadRequestParallelism:" + this.parallelism);
 	}
 
 	/**
@@ -1407,10 +1406,10 @@ public class SFTPv3Client
 				String msg = tr.readString();
 				listener.read(msg);
 
-				if (log.isEnabled())
+				if (log.isDebugEnabled())
 				{
 					String[] desc = ErrorCodes.getDescription(code);
-					log.log("Got SSH_FXP_STATUS (" + req.req_id + ") (" + ((desc != null) ? desc[0] : "UNKNOWN") + ")");
+					log.debug("Got SSH_FXP_STATUS (" + req.req_id + ") (" + ((desc != null) ? desc[0] : "UNKNOWN") + ")");
 				}
 				// Flag to read all pending requests but don't send any more.
 				errorOccured = true;
@@ -1433,9 +1432,9 @@ public class SFTPv3Client
 					throw new IOException("The server sent an invalid length field in a SSH_FXP_DATA packet.");
 				}
 
-				if (log.isEnabled())
+				if (log.isDebugEnabled())
 				{
-					log.log("Got SSH_FXP_DATA (" + req.req_id + ") " + req.serverOffset + "/" + readLen
+					log.debug("Got SSH_FXP_DATA (" + req.req_id + ") " + req.serverOffset + "/" + readLen
 							+ " (requested: " + req.len + ")");
 				}
 
@@ -1449,7 +1448,7 @@ public class SFTPv3Client
 					req.serverOffset += readLen;
 					req.len -= readLen;
 
-					log.log("Requesting again: " + req.serverOffset + "/" + req.len);
+					log.debug("Requesting again: " + req.serverOffset + "/" + req.len);
 					sendReadRequest(req.req_id, handle, req.serverOffset, req.len);
 
 					pendingReadQueue.put(req.req_id, req);
@@ -1504,7 +1503,7 @@ public class SFTPv3Client
 		tw.writeUINT64(fileOffset);
 		tw.writeString(src, srcoff, len);
 
-		log.log("Sending SSH_FXP_WRITE...");
+		log.debug("Sending SSH_FXP_WRITE...");
 		sendMessage(Packet.SSH_FXP_WRITE, req.req_id, tw.getBytes());
 
 		pendingStatusQueue.put(req.req_id, req);
@@ -1536,10 +1535,10 @@ public class SFTPv3Client
 		{
 			// In any case, stop sending more packets
 			int code = tr.readUINT32();
-			if (log.isEnabled())
+			if (log.isDebugEnabled())
 			{
 				String[] desc = ErrorCodes.getDescription(code);
-				log.log("Got SSH_FXP_STATUS (" + status.req_id + ") (" + ((desc != null) ? desc[0] : "UNKNOWN") + ")");
+				log.debug("Got SSH_FXP_STATUS (" + status.req_id + ") (" + ((desc != null) ? desc[0] : "UNKNOWN") + ")");
 			}
 			if (code == ErrorCodes.SSH_FX_OK)
 			{

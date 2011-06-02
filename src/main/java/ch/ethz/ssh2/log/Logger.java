@@ -4,20 +4,18 @@
  */
 package ch.ethz.ssh2.log;
 
+import java.util.logging.Level;
+
 /**
- * Logger - a very simple logger, mainly used during development.
- * Is not based on log4j (to reduce external dependencies).
- * However, if needed, something like log4j could easily be
- * hooked in.
+ * Logger delegating to JRE logging.
  *
  * @author Christian Plattner
  * @version $Id$
  */
-
 public class Logger
 {
 
-	private String className;
+	private java.util.logging.Logger delegate;
 
 	public static Logger getLogger(Class x)
 	{
@@ -26,28 +24,36 @@ public class Logger
 
 	public Logger(Class x)
 	{
-		this.className = x.getName();
+		this.delegate = java.util.logging.Logger.getLogger(x.getName());
 	}
 
-	public final boolean isEnabled()
+	public boolean isDebugEnabled()
 	{
-		return true;
+		return delegate.isLoggable(Level.FINER);
 	}
 
-	public final void log(String message)
+	public void debug(String message)
 	{
-		this.log(50, message);
+		delegate.fine(message);
 	}
 
-	public final void log(int level, String message)
+	public boolean isInfoEnabled()
 	{
-		if (level <= 20)
-		{
-			java.util.logging.Logger.getLogger(className).warning(message);
-		}
-		else
-		{
-			java.util.logging.Logger.getLogger(className).fine(message);
-		}
+		return delegate.isLoggable(Level.FINE);
+	}
+
+	public void info(String message)
+	{
+		delegate.info(message);
+	}
+
+	public boolean isWarningEnabled()
+	{
+		return delegate.isLoggable(Level.WARNING);
+	}
+
+	public void warning(String message)
+	{
+		delegate.warning(message);
 	}
 }

@@ -19,9 +19,9 @@ import ch.ethz.ssh2.packets.Packets;
 
 /**
  * TransportConnection.
- * 
+ *
  * @author Christian Plattner
- * @version 2.50, 03/15/10
+ * @version $Id$
  */
 public class TransportConnection
 {
@@ -194,9 +194,9 @@ public class TransportConnection
 
 		cos.flush();
 
-		if (log.isEnabled())
+		if (log.isDebugEnabled())
 		{
-			log.log(90, "Sent " + Packets.getMessageName(message[off] & 0xff) + " " + len + " bytes payload");
+			log.debug("Sent " + Packets.getMessageName(message[off] & 0xff) + " " + len + " bytes payload");
 		}
 
 		send_seq_number++;
@@ -275,9 +275,9 @@ public class TransportConnection
 
 		recv_seq_number++;
 
-		if (log.isEnabled())
+		if (log.isDebugEnabled())
 		{
-			log.log(90, "Received " + Packets.getMessageName(buffer[off] & 0xff) + " " + payload_length
+			log.debug("Received " + Packets.getMessageName(buffer[off] & 0xff) + " " + payload_length
 					+ " bytes payload");
 		}
 

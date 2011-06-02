@@ -12,10 +12,8 @@ import ch.ethz.ssh2.log.Logger;
 import ch.ethz.ssh2.util.StringEncoder;
 
 /**
- * DhExchange.
- * 
  * @author Christian Plattner
- * @version 2.50, 03/15/10
+ * @version $Id$
  */
 public class DhExchange
 {
@@ -125,16 +123,15 @@ public class DhExchange
 	}
 
 	public byte[] calculateH(byte[] clientversion, byte[] serverversion, byte[] clientKexPayload,
-			byte[] serverKexPayload, byte[] hostKey)
+							 byte[] serverKexPayload, byte[] hostKey)
 	{
 		HashForSSH2Types hash = new HashForSSH2Types("SHA1");
 
-		if (log.isEnabled())
+		if (log.isInfoEnabled())
 		{
-			log.log(90, "Client: '" + StringEncoder.GetString(clientversion) + "'");
-			log.log(90, "Server: '" + StringEncoder.GetString(serverversion) + "'");
+			log.info("Client: '" + StringEncoder.GetString(clientversion) + "'");
+		    log.info("Server: '" + StringEncoder.GetString(serverversion) + "'");
 		}
-
 		hash.updateByteString(clientversion);
 		hash.updateByteString(serverversion);
 		hash.updateByteString(clientKexPayload);

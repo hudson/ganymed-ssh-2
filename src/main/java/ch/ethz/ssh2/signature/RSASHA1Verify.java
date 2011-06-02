@@ -17,7 +17,7 @@ import ch.ethz.ssh2.packets.TypesWriter;
  * RSASHA1Verify.
  * 
  * @author Christian Plattner
- * @version 2.50, 03/15/10
+ * @version $Id$
  */
 public class RSASHA1Verify
 {
@@ -71,9 +71,9 @@ public class RSASHA1Verify
 		if (s.length == 0)
 			throw new IOException("Error in RSA signature, S is empty.");
 
-		if (log.isEnabled())
+		if (log.isDebugEnabled())
 		{
-			log.log(80, "Decoding ssh-rsa signature string (length: " + s.length + ")");
+			log.debug("Decoding ssh-rsa signature string (length: " + s.length + ")");
 		}
 
 		if (tr.remain() != 0)
@@ -156,7 +156,7 @@ public class RSASHA1Verify
 
 		if (n.compareTo(s) <= 0)
 		{
-			log.log(20, "ssh-rsa signature: n.compareTo(s) <= 0");
+			log.warning("ssh-rsa signature: n.compareTo(s) <= 0");
 			return false;
 		}
 
@@ -166,7 +166,7 @@ public class RSASHA1Verify
 
 		if (rsa_block_len < 1)
 		{
-			log.log(20, "ssh-rsa signature: rsa_block_len < 1");
+			log.warning("ssh-rsa signature: rsa_block_len < 1");
 			return false;
 		}
 
@@ -179,13 +179,13 @@ public class RSASHA1Verify
 
 		if ((v.length - startpos) != (rsa_block_len - 1))
 		{
-			log.log(20, "ssh-rsa signature: (v.length - startpos) != (rsa_block_len - 1)");
+			log.warning("ssh-rsa signature: (v.length - startpos) != (rsa_block_len - 1)");
 			return false;
 		}
 
 		if (v[startpos] != 0x01)
 		{
-			log.log(20, "ssh-rsa signature: v[startpos] != 0x01");
+			log.warning("ssh-rsa signature: v[startpos] != 0x01");
 			return false;
 		}
 
@@ -195,14 +195,14 @@ public class RSASHA1Verify
 		{
 			if (pos >= v.length)
 			{
-				log.log(20, "ssh-rsa signature: pos >= v.length");
+				log.warning("ssh-rsa signature: pos >= v.length");
 				return false;
 			}
 			if (v[pos] == 0x00)
 				break;
 			if (v[pos] != (byte) 0xff)
 			{
-				log.log(20, "ssh-rsa signature: v[pos] != (byte) 0xff");
+				log.warning("ssh-rsa signature: v[pos] != (byte) 0xff");
 				return false;
 			}
 			pos++;
@@ -212,7 +212,7 @@ public class RSASHA1Verify
 
 		if (num_pad < 8)
 		{
-			log.log(20, "ssh-rsa signature: num_pad < 8");
+			log.warning("ssh-rsa signature: num_pad < 8");
 			return false;
 		}
 
@@ -220,7 +220,7 @@ public class RSASHA1Verify
 
 		if (pos >= v.length)
 		{
-			log.log(20, "ssh-rsa signature: pos >= v.length");
+			log.warning("ssh-rsa signature: pos >= v.length");
 			return false;
 		}
 
@@ -230,7 +230,7 @@ public class RSASHA1Verify
 
 		if (dr.available() != 0)
 		{
-			log.log(20, "ssh-rsa signature: dr.available() != 0");
+			log.warning("ssh-rsa signature: dr.available() != 0");
 			return false;
 		}
 
@@ -244,7 +244,7 @@ public class RSASHA1Verify
 
 		if ((digestAlgorithm.length < 8) || (digestAlgorithm.length > 9))
 		{
-			log.log(20, "ssh-rsa signature: (digestAlgorithm.length < 8) || (digestAlgorithm.length > 9)");
+			log.warning("ssh-rsa signature: (digestAlgorithm.length < 8) || (digestAlgorithm.length > 9)");
 			return false;
 		}
 
@@ -254,7 +254,7 @@ public class RSASHA1Verify
 		{
 			if (digestAlgorithm[i] != digestAlgorithm_sha1[i])
 			{
-				log.log(20, "ssh-rsa signature: digestAlgorithm[i] != digestAlgorithm_sha1[i]");
+				log.warning("ssh-rsa signature: digestAlgorithm[i] != digestAlgorithm_sha1[i]");
 				return false;
 			}
 		}
@@ -263,13 +263,13 @@ public class RSASHA1Verify
 
 		if (dr.available() != 0)
 		{
-			log.log(20, "ssh-rsa signature: dr.available() != 0 (II)");
+			log.warning("ssh-rsa signature: dr.available() != 0 (II)");
 			return false;
 		}
 			
 		if (digest.length != sha_message.length)
 		{
-			log.log(20, "ssh-rsa signature: digest.length != sha_message.length");
+			log.warning("ssh-rsa signature: digest.length != sha_message.length");
 			return false;
 		}
 
@@ -277,7 +277,7 @@ public class RSASHA1Verify
 		{
 			if (sha_message[i] != digest[i])
 			{
-				log.log(20, "ssh-rsa signature: sha_message[i] != digest[i]");
+				log.warning("ssh-rsa signature: sha_message[i] != digest[i]");
 				return false;
 			}
 		}

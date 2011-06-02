@@ -464,7 +464,8 @@ public class TransportManager
 	}
 
 	public void initialize(String identification, CryptoWishList cwl, ServerHostKeyVerifier verifier,
-			DHGexParameters dhgex, int connectTimeout, SecureRandom rnd, ProxyData proxyData) throws IOException
+						   DHGexParameters dhgex, int connectTimeout, SecureRandom rnd, ProxyData proxyData)
+			throws IOException
 	{
 		/* First, establish the TCP connection to the SSH-2 server */
 
@@ -494,15 +495,12 @@ public class TransportManager
 				{
 					close(e, false);
 
-					if (log.isEnabled())
-					{
-						log.log(10, "Receive thread: error in receiveLoop: " + e.getMessage());
-					}
+					log.warning("Receive thread: error in receiveLoop: " + e.getMessage());
 				}
 
-				if (log.isEnabled())
+				if (log.isDebugEnabled())
 				{
-					log.log(50, "Receive thread: back from receiveLoop");
+					log.debug("Receive thread: back from receiveLoop");
 				}
 
 				/* Tell all handlers that it is time to say goodbye */
@@ -726,7 +724,7 @@ public class TransportManager
 				// Timeout in read
 				if (idle)
 				{
-					log.log("Ignoring socket timeout");
+					log.debug("Ignoring socket timeout");
 					continue;
 				}
 				throw e;
@@ -742,7 +740,7 @@ public class TransportManager
 
 			if (type == Packets.SSH_MSG_DEBUG)
 			{
-				if (log.isEnabled())
+				if (log.isDebugEnabled())
 				{
 					TypesReader tr = new TypesReader(msg, 0, msglen);
 					tr.readByte();
@@ -761,7 +759,7 @@ public class TransportManager
 						debugMessageBuffer.setCharAt(i, '\uFFFD');
 					}
 
-					log.log(50, "DEBUG Message from remote: '" + debugMessageBuffer.toString() + "'");
+					log.debug("DEBUG Message from remote: '" + debugMessageBuffer.toString() + "'");
 				}
 				continue;
 			}
