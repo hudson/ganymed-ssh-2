@@ -5,7 +5,7 @@
  */
 package ch.ethz.ssh2.util;
 
-import java.nio.charset.Charset;
+import java.io.UnsupportedEncodingException;
 
 /**
  * @author Christian Plattner
@@ -15,8 +15,13 @@ public class StringEncoder
 {
 	public static byte[] GetBytes(String data)
 	{
-		return data.getBytes(Charset.forName("UTF-8"));
-	}
+        try {
+            return data.getBytes("UTF-8");
+        }
+        catch(UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 	public static String GetString(byte[] data)
 	{
@@ -25,6 +30,11 @@ public class StringEncoder
 
 	public static String GetString(byte[] data, int off, int len)
 	{
-		return new String(data, off, len, Charset.forName("UTF-8"));
-	}
+        try {
+            return new String(data, off, len, "UTF-8");
+        }
+        catch(UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
