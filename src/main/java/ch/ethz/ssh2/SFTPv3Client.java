@@ -908,9 +908,9 @@ public class SFTPv3Client
 	 */
 	public List<SFTPv3DirectoryEntry> ls(String dirName) throws IOException
 	{
-		byte[] handle = openDirectory(dirName).fileHandle;
-		List<SFTPv3DirectoryEntry> result = scanDirectory(handle);
-		closeHandle(handle);
+        SFTPv3FileHandle handle = openDirectory(dirName);
+        List<SFTPv3DirectoryEntry> result = scanDirectory(handle.fileHandle);
+		closeFile(handle);
 		return result;
 	}
 
