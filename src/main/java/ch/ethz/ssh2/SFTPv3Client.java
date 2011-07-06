@@ -1551,6 +1551,46 @@ public class SFTPv3Client
 		throw new IOException("The SFTP server sent an unexpected packet type (" + t + ")");
 	}
 
+	private void readPendingReadStatus() throws IOException
+	{
+		byte[] resp = receiveMessage(34000);
+
+		TypesReader tr = new TypesReader(resp);
+		int t = tr.readByte();
+		listener.read(Packet.forName(t));
+
+		// Search the pending queue
+        OutstandingReadRequest status = pendingReadQueue.remove(tr.readUINT32());
+        if (null == status)
+		{
+			throw new IOException("The server sent an invalid id field.");
+		}
+
+		// Evaluate the answer
+		if (t == Packet.SSH_FXP_STATUS)
+		{
+			// In any case, stop sending more packets
+			int code = tr.readUINT32();
+			if (log.isDebugEnabled())
+			{
+				String[] desc = ErrorCodes.getDescription(code);
+				log.debug("Got SSH_FXP_STATUS (" + status.req_id + ") (" + ((desc != null) ? desc[0] : "UNKNOWN") + ")");
+			}
+			if (code == ErrorCodes.SSH_FX_OK)
+			{
+				return;
+			}
+            if (code == ErrorCodes.SSH_FX_EOF)
+            {
+                return;
+            }
+			String msg = tr.readString();
+			listener.read(msg);
+			throw new SFTPException(msg, code);
+		}
+		throw new IOException("The SFTP server sent an unexpected packet type (" + t + ")");
+	}
+
 	/**
 	 * Close a file.
 	 *
@@ -1561,6 +1601,10 @@ public class SFTPv3Client
 	{
 		try
 		{
+			while (!pendingReadQueue.isEmpty())
+			{
+				this.readPendingReadStatus();
+			}
 			while (!pendingStatusQueue.isEmpty())
 			{
 				this.readStatus();
