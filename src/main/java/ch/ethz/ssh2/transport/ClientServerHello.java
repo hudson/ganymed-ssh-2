@@ -63,7 +63,8 @@ public class ClientServerHello
 		bo.write(StringEncoder.GetBytes(client_line + "\r\n"));
 		bo.flush();
 
-		byte[] serverVersion = new byte[512];
+		//In some cases connection to server fails, because server line is too long
+        byte[] serverVersion = new byte[1024];
 
 		for (int i = 0; i < 50; i++)
 		{
