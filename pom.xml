@@ -2,10 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.googlecode.ganymed-ssh-2</groupId>
+    <groupId>org.jvnet.hudson</groupId>
     <artifactId>ganymed-ssh-2</artifactId>
     <packaging>jar</packaging>
-    <version>260</version>
+    <version>build260-SNAPSHOT</version>
     <name>ganymed-ssh-2</name>
     <developers>
         <developer>
@@ -25,11 +25,9 @@
         <maven.compile.source>1.5</maven.compile.source>
         <maven.compile.target>1.5</maven.compile.target>
         <source.encoding>UTF-8</source.encoding>
+        <maven-release-plugin.version>2.1</maven-release-plugin.version>
+        <maven-gpg-plugin.version>1.2</maven-gpg-plugin.version>
     </properties>
-    <repositories/>
-    <pluginRepositories/>
-    <dependencyManagement/>
-    <dependencies/>
     <build>
         <plugins>
             <plugin>
@@ -87,9 +85,16 @@
                 <artifactId>maven-site-plugin</artifactId>
                 <version>3.0-beta-3</version>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>${maven-release-plugin.version}</version>
+                <configuration>
+                    <goals>deploy</goals>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-    <profiles/>
     <reporting>
         <plugins>
             <plugin>
@@ -135,4 +140,77 @@
             </plugin>
         </plugins>
     </reporting>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <scm>
+        <connection>scm:git:git://github.com/8nevil8/ganymed-ssh-2.git</connection>
+        <developerConnection>scm:git:git@github.com:8nevil8/ganymed-ssh-2.git</developerConnection>
+        <url>https://github.com/8nevil8/ganymed-ssh-2</url>
+    </scm>
+
+    <repositories>
+        <repository>
+            <id>m.g.o-public</id>
+            <url>http://maven.glassfish.org/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>hudson.snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>sonatype-nexus-staging</id>
+            <name>Nexus Release Repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
 </project>

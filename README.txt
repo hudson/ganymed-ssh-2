@@ -1,5 +1,5 @@
 
-Ganymed SSH-2 for Java - build 251 beta1
+Ganymed SSH-2 for Java - build 260
 ========================================
 
 http://www.cleondris.ch/opensource/ssh2/
