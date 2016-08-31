@@ -58,7 +58,11 @@ public class PublicKeyAuthentication
 					break;
 				System.out.println(line);
 			}
-
+			
+			/* close buffer Reader */
+			
+			br.close();
+			
 			/* Close this session */
 			
 			sess.close();
