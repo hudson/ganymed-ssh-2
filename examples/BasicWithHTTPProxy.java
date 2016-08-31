@@ -79,6 +79,10 @@ public class BasicWithHTTPProxy
 			/* Show exit status, if available (otherwise "null") */
 
 			System.out.println("ExitCode: " + sess.getExitStatus());
+			
+			/* close buffer Reader */
+			
+			br.close();
 
 			/* Close this session */
 

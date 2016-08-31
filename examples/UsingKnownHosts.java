@@ -66,6 +66,10 @@ public class UsingKnownHosts
 				System.out.println(line);
 			}
 
+			/* close the buffer reader */
+			
+			br.close();
+			
 			/* Close this session */
 
 			sess.close();

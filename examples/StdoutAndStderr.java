@@ -67,6 +67,12 @@ public class StdoutAndStderr
 					break;
 				System.out.println(line);
 			}
+
+
+			/* close the buffer reader */
+			
+			stdoutReader.close();
+			stderrReader.close();
 			
 			/* Close this session */
 			
